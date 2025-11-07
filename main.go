@@ -2,6 +2,7 @@ package main
 
 import (
 	"flag"
+	"fmt"
 	"os"
 
 	svg "github.com/ajstarks/svgo"
@@ -259,7 +260,7 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 		// Right edge: full height (position 6, rows 0-6) - this creates the connected frame
 		canvas.Rect(cornerX+6*moduleSize, cornerY, moduleSize, 7*moduleSize, "fill:#552048")
 
-		// Render inner center as either a circle or square (positions 2-4, 3x3 block)
+		// Render inner center as either a circle, square, or diamond (positions 2-4, 3x3 block)
 		centerX := cornerX + 2*moduleSize
 		centerY := cornerY + 2*moduleSize
 		if cornerCenterStyle == "circle" {
@@ -269,6 +270,20 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 			// Radius is half the width/height of the 3x3 block
 			radius := (3 * moduleSize) / 2
 			canvas.Circle(centerCX, centerCY, radius, "fill:#552048")
+		} else if cornerCenterStyle == "diamond" {
+			// Render as a diamond (rotated square)
+			// Center of the 3x3 block
+			centerCX := centerX + (3*moduleSize)/2
+			centerCY := centerY + (3*moduleSize)/2
+			// Half-size for the diamond (diagonal distance from center to corner)
+			halfSize := (3 * moduleSize) / 2
+			// Diamond path: M (move to top), L (line to right), L (line to bottom), L (line to left), Z (close)
+			path := fmt.Sprintf("M %d,%d L %d,%d L %d,%d L %d,%d Z",
+				centerCX, centerCY-halfSize, // Move to top
+				centerCX+halfSize, centerCY, // Line to right
+				centerCX, centerCY+halfSize, // Line to bottom
+				centerCX-halfSize, centerCY) // Line to left, close
+			canvas.Path(path, "fill:#552048")
 		} else {
 			// Render as a square (default)
 			canvas.Rect(centerX, centerY, 3*moduleSize, 3*moduleSize, "fill:#552048")
@@ -281,16 +296,16 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 
 func main() {
 	// Parse command line flags
-	cornerCenter := flag.String("corner-center", "square", "Corner center style: 'circle' or 'square'")
+	cornerCenter := flag.String("corner-center", "square", "Corner center style: 'circle', 'square', or 'diamond'")
 	flag.Parse()
 
 	// Validate corner center style
-	if *cornerCenter != "circle" && *cornerCenter != "square" {
-		panic("corner-center must be either 'circle' or 'square'")
+	if *cornerCenter != "circle" && *cornerCenter != "square" && *cornerCenter != "diamond" {
+		panic("corner-center must be either 'circle', 'square', or 'diamond'")
 	}
 
 	// Generate QR code
-	q, err := qrcode.New("https://x.com/ItsNickNorton/status/1986520090666569982", qrcode.Highest)
+	q, err := qrcode.New("https://nickn.dev", qrcode.Highest)
 	if err != nil {
 		panic(err)
 	}
