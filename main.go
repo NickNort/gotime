@@ -263,14 +263,15 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 		// Render inner center as either a circle, square, or diamond (positions 2-4, 3x3 block)
 		centerX := cornerX + 2*moduleSize
 		centerY := cornerY + 2*moduleSize
-		if cornerCenterStyle == "circle" {
+		switch cornerCenterStyle {
+		case "circle":
 			// Center of the 3x3 block
 			centerCX := centerX + (3*moduleSize)/2
 			centerCY := centerY + (3*moduleSize)/2
 			// Radius is half the width/height of the 3x3 block
 			radius := (3 * moduleSize) / 2
 			canvas.Circle(centerCX, centerCY, radius, "fill:#552048")
-		} else if cornerCenterStyle == "diamond" {
+		case "diamond":
 			// Render as a diamond (rotated square)
 			// Center of the 3x3 block
 			centerCX := centerX + (3*moduleSize)/2
@@ -284,7 +285,7 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 				centerCX, centerCY+halfSize, // Line to bottom
 				centerCX-halfSize, centerCY) // Line to left, close
 			canvas.Path(path, "fill:#552048")
-		} else {
+		default:
 			// Render as a square (default)
 			canvas.Rect(centerX, centerY, 3*moduleSize, 3*moduleSize, "fill:#552048")
 		}
