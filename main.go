@@ -18,17 +18,34 @@ func renderQR(bitmap [][]bool, moduleSize int) *image.RGBA {
 	dc.SetRGB(0.973, 0.949, 0.925) // #f8f2ec
 	dc.Clear()
 
-	// Draw modules as circles
+	// Foreground color
 	dc.SetRGB(0.333, 0.125, 0.282) // #552048
-	for y := 0; y < len(bitmap); y++ {
-		for x := 0; x < len(bitmap[y]); x++ {
-			if bitmap[y][x] {
-				centerX := float64(x*moduleSize + moduleSize/2)
-				centerY := float64(y*moduleSize + moduleSize/2)
-				radius := float64(moduleSize) / 2.0
 
-				dc.DrawCircle(centerX, centerY, radius)
+	// Iterate through each row
+	for y := 0; y < len(bitmap); y++ {
+		x := 0
+		for x < len(bitmap[y]) {
+			if bitmap[y][x] {
+				// Found start of a dark run
+				startX := x
+
+				// Count consecutive dark modules
+				for x < len(bitmap[y]) && bitmap[y][x] {
+					x++
+				}
+				endX := x
+
+				// Draw one rounded rectangle for the entire run
+				width := float64((endX - startX) * moduleSize)
+				height := float64(moduleSize)
+				xPos := float64(startX * moduleSize)
+				yPos := float64(y * moduleSize)
+				radius := float64(moduleSize) / 4.0 // Adjust for desired roundness
+
+				dc.DrawRoundedRectangle(xPos, yPos, width, height, radius)
 				dc.Fill()
+			} else {
+				x++
 			}
 		}
 	}
