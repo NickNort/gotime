@@ -1,25 +1,20 @@
 package main
 
 import (
-	"image"
-	"image/png"
 	"os"
 
-	"github.com/fogleman/gg"
+	svg "github.com/ajstarks/svgo"
 	"github.com/skip2/go-qrcode"
 )
 
-func renderQR(bitmap [][]bool, moduleSize int) *image.RGBA {
+func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG) {
 	size := len(bitmap) * moduleSize
 
-	dc := gg.NewContext(size, size)
+	// Start SVG
+	canvas.Start(size, size)
 
 	// Background
-	dc.SetRGB(0.973, 0.949, 0.925) // #f8f2ec
-	dc.Clear()
-
-	// Foreground color
-	dc.SetRGB(0.333, 0.125, 0.282) // #552048
+	canvas.Rect(0, 0, size, size, "fill:#f8f2ec")
 
 	// Iterate through each row
 	for y := 0; y < len(bitmap); y++ {
@@ -36,21 +31,21 @@ func renderQR(bitmap [][]bool, moduleSize int) *image.RGBA {
 				endX := x
 
 				// Draw one rounded rectangle for the entire run
-				width := float64((endX - startX) * moduleSize)
-				height := float64(moduleSize)
-				xPos := float64(startX * moduleSize)
-				yPos := float64(y * moduleSize)
-				radius := float64(moduleSize) / 4.0 // Adjust for desired roundness
+				width := (endX - startX) * moduleSize
+				height := moduleSize
+				xPos := startX * moduleSize
+				yPos := y * moduleSize
+				radius := moduleSize / 4 // Adjust for desired roundness
 
-				dc.DrawRoundedRectangle(xPos, yPos, width, height, radius)
-				dc.Fill()
+				canvas.Roundrect(xPos, yPos, width, height, radius, radius, "fill:#552048")
 			} else {
 				x++
 			}
 		}
 	}
 
-	return dc.Image().(*image.RGBA)
+	// End SVG
+	canvas.End()
 }
 
 func main() {
@@ -64,18 +59,17 @@ func main() {
 	// It's a 2D boolean array where true = dark module, false = light module
 	bitmap := q.Bitmap()
 
-	// Render QR code as image
-	moduleSize := 10 // Size of each module in pixels
-	img := renderQR(bitmap, moduleSize)
-
-	// Save it
-	f, err := os.Create("qr.png")
+	// Create output file
+	f, err := os.Create("qr.svg")
 	if err != nil {
 		panic(err)
 	}
 	defer f.Close()
 
-	if err := png.Encode(f, img); err != nil {
-		panic(err)
-	}
+	// Create SVG canvas
+	canvas := svg.New(f)
+
+	// Render QR code as SVG
+	moduleSize := 10 // Size of each module in pixels
+	renderQR(bitmap, moduleSize, canvas)
 }
