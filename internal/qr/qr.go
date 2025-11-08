@@ -30,10 +30,12 @@ type CornerBounds struct {
 
 // Options contains configuration for QR code generation
 type Options struct {
-	FinderCenter string // "circle" | "square" | "diamond"
-	FinderFrame  string // "square" | "rounded" | "circle" | "diamond"
-	ModuleShape  string // "square" | "rounded" | "circle" | "diamond"
-	ModuleSize   int    // pixels per module; 0 => default 10
+	FinderCenter   string // "circle" | "square" | "diamond"
+	FinderFrame    string // "square" | "rounded" | "circle" | "diamond"
+	ModuleShape    string // "square" | "rounded" | "circle" | "diamond"
+	ModuleSize     int    // pixels per module; 0 => default 10
+	BackgroundColor string // hex color code (e.g., "#f8f2ec"); empty => default
+	ForegroundColor string // hex color code (e.g., "#552048"); empty => default
 }
 
 // isFinderPattern checks if a 7x7 region starting at (x, y) matches a QR code finder pattern
@@ -176,14 +178,14 @@ func isInCorner(x, y int, corners CornerBounds) bool {
 	return false
 }
 
-func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBounds, cornerCenterStyle string, finderFrameStyle string, moduleShape string) {
+func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBounds, cornerCenterStyle string, finderFrameStyle string, moduleShape string, bgColor string, fgColor string) {
 	size := len(bitmap) * moduleSize
 
 	// Start SVG
 	canvas.Start(size, size)
 
 	// Background
-	canvas.Rect(0, 0, size, size, "fill:"+backgroundColor)
+	canvas.Rect(0, 0, size, size, "fill:"+bgColor)
 
 	// First pass: render all non-corner modules normally
 	switch moduleShape {
@@ -199,7 +201,7 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 					radius := moduleSize / 2
 
 					if moduleShape == "circle" {
-						canvas.Circle(centerX, centerY, radius, "fill:"+foregroundColor)
+						canvas.Circle(centerX, centerY, radius, "fill:"+fgColor)
 					} else { // diamond
 						halfSize := moduleSize / 2
 						path := fmt.Sprintf("M %d,%d L %d,%d L %d,%d L %d,%d Z",
@@ -207,7 +209,7 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 							centerX+halfSize, centerY, // Right
 							centerX, centerY+halfSize, // Bottom
 							centerX-halfSize, centerY) // Left
-						canvas.Path(path, "fill:"+foregroundColor)
+						canvas.Path(path, "fill:"+fgColor)
 					}
 				}
 			}
@@ -235,9 +237,9 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 
 					if moduleShape == "rounded" {
 						radius := moduleSize / 4
-						canvas.Roundrect(xPos, yPos, width, height, radius, radius, "fill:"+foregroundColor)
+						canvas.Roundrect(xPos, yPos, width, height, radius, radius, "fill:"+fgColor)
 					} else { // square
-						canvas.Rect(xPos, yPos, width, height, "fill:"+foregroundColor)
+						canvas.Rect(xPos, yPos, width, height, "fill:"+fgColor)
 					}
 				} else {
 					x++
@@ -262,12 +264,12 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 			// Draw outer rounded rectangle, then subtract inner area
 			radius := moduleSize / 2
 			// Outer rounded rectangle
-			canvas.Roundrect(cornerX, cornerY, frameSize, frameSize, radius, radius, "fill:"+foregroundColor)
+			canvas.Roundrect(cornerX, cornerY, frameSize, frameSize, radius, radius, "fill:"+fgColor)
 			// Inner rounded rectangle (subtract by drawing background color)
 			innerSize := 5 * moduleSize // Inner size is 5x5 (positions 1-5)
 			innerX := cornerX + moduleSize
 			innerY := cornerY + moduleSize
-			canvas.Roundrect(innerX, innerY, innerSize, innerSize, radius, radius, "fill:"+backgroundColor)
+			canvas.Roundrect(innerX, innerY, innerSize, innerSize, radius, radius, "fill:"+bgColor)
 		case "circle":
 			// Render as a circular frame
 			centerCX := cornerX + frameSize/2
@@ -275,9 +277,9 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 			outerRadius := frameSize / 2
 			innerRadius := (5 * moduleSize) / 2 // Inner radius for 5x5 area
 			// Draw outer circle
-			canvas.Circle(centerCX, centerCY, outerRadius, "fill:"+foregroundColor)
+			canvas.Circle(centerCX, centerCY, outerRadius, "fill:"+fgColor)
 			// Subtract inner circle
-			canvas.Circle(centerCX, centerCY, innerRadius, "fill:"+backgroundColor)
+			canvas.Circle(centerCX, centerCY, innerRadius, "fill:"+bgColor)
 		case "diamond":
 			// Render as a diamond-shaped frame
 			centerCX := cornerX + frameSize/2
@@ -288,24 +290,24 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 				cornerX+frameSize, centerCY, // Right
 				centerCX, cornerY+frameSize, // Bottom
 				cornerX, centerCY) // Left
-			canvas.Path(outerPath, "fill:"+foregroundColor)
+			canvas.Path(outerPath, "fill:"+fgColor)
 			// Inner diamond path (subtract 5x5 area by drawing background color)
 			innerPath := fmt.Sprintf("M %d,%d L %d,%d L %d,%d L %d,%d Z",
 				centerCX, cornerY+moduleSize, // Top
 				cornerX+6*moduleSize, centerCY, // Right
 				centerCX, cornerY+6*moduleSize, // Bottom
 				cornerX+moduleSize, centerCY) // Left
-			canvas.Path(innerPath, "fill:"+backgroundColor)
+			canvas.Path(innerPath, "fill:"+bgColor)
 		default:
 			// Render as a square frame (default)
 			// Top bar: full width (row 0, positions 0-6)
-			canvas.Rect(cornerX, cornerY, frameSize, frameThickness, "fill:"+foregroundColor)
+			canvas.Rect(cornerX, cornerY, frameSize, frameThickness, "fill:"+fgColor)
 			// Bottom bar: full width (row 6, positions 0-6)
-			canvas.Rect(cornerX, cornerY+6*moduleSize, frameSize, frameThickness, "fill:"+foregroundColor)
+			canvas.Rect(cornerX, cornerY+6*moduleSize, frameSize, frameThickness, "fill:"+fgColor)
 			// Left edge: full height (position 0, rows 0-6)
-			canvas.Rect(cornerX, cornerY, frameThickness, frameSize, "fill:"+foregroundColor)
+			canvas.Rect(cornerX, cornerY, frameThickness, frameSize, "fill:"+fgColor)
 			// Right edge: full height (position 6, rows 0-6)
-			canvas.Rect(cornerX+6*moduleSize, cornerY, frameThickness, frameSize, "fill:"+foregroundColor)
+			canvas.Rect(cornerX+6*moduleSize, cornerY, frameThickness, frameSize, "fill:"+fgColor)
 		}
 
 		// Render inner center as either a circle, square, or diamond (positions 2-4, 3x3 block)
@@ -318,7 +320,7 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 			centerCY := centerY + (3*moduleSize)/2
 			// Radius is half the width/height of the 3x3 block
 			radius := (3 * moduleSize) / 2
-			canvas.Circle(centerCX, centerCY, radius, "fill:"+foregroundColor)
+			canvas.Circle(centerCX, centerCY, radius, "fill:"+fgColor)
 		case "diamond":
 			// Render as a diamond (rotated square)
 			// Center of the 3x3 block
@@ -332,10 +334,10 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 				centerCX+halfSize, centerCY, // Line to right
 				centerCX, centerCY+halfSize, // Line to bottom
 				centerCX-halfSize, centerCY) // Line to left, close
-			canvas.Path(path, "fill:"+foregroundColor)
+			canvas.Path(path, "fill:"+fgColor)
 		default:
 			// Render as a square (default)
-			canvas.Rect(centerX, centerY, 3*moduleSize, 3*moduleSize, "fill:"+foregroundColor)
+			canvas.Rect(centerX, centerY, 3*moduleSize, 3*moduleSize, "fill:"+fgColor)
 		}
 	}
 
@@ -357,6 +359,12 @@ func GenerateSVG(content string, opts Options) ([]byte, error) {
 	}
 	if opts.ModuleSize == 0 {
 		opts.ModuleSize = 10
+	}
+	if opts.BackgroundColor == "" {
+		opts.BackgroundColor = backgroundColor
+	}
+	if opts.ForegroundColor == "" {
+		opts.ForegroundColor = foregroundColor
 	}
 
 	// Validate parameters
@@ -390,7 +398,7 @@ func GenerateSVG(content string, opts Options) ([]byte, error) {
 	canvas := svg.New(&buf)
 
 	// Render QR code as SVG
-	renderQR(bitmap, opts.ModuleSize, canvas, corners, opts.FinderCenter, opts.FinderFrame, opts.ModuleShape)
+	renderQR(bitmap, opts.ModuleSize, canvas, corners, opts.FinderCenter, opts.FinderFrame, opts.ModuleShape, opts.BackgroundColor, opts.ForegroundColor)
 
 	return buf.Bytes(), nil
 }

@@ -12,10 +12,12 @@ import (
 
 // QRRequest represents the JSON request body for QR code generation
 type QRRequest struct {
-	Content      string `json:"content"`
-	FinderCenter string `json:"finder_center,omitempty"`
-	FinderFrame  string `json:"finder_frame,omitempty"`
-	ModuleShape  string `json:"module_shape,omitempty"`
+	Content         string `json:"content"`
+	FinderCenter    string `json:"finder_center,omitempty"`
+	FinderFrame     string `json:"finder_frame,omitempty"`
+	ModuleShape     string `json:"module_shape,omitempty"`
+	BackgroundColor string `json:"background_color,omitempty"`
+	ForegroundColor string `json:"foreground_color,omitempty"`
 }
 
 // ErrorResponse represents an error response in JSON format
@@ -58,9 +60,11 @@ func handleQR(w http.ResponseWriter, r *http.Request) {
 
 	// Generate QR code SVG
 	svgBytes, err := qr.GenerateSVG(req.Content, qr.Options{
-		FinderCenter: req.FinderCenter,
-		FinderFrame:  req.FinderFrame,
-		ModuleShape:  req.ModuleShape,
+		FinderCenter:    req.FinderCenter,
+		FinderFrame:     req.FinderFrame,
+		ModuleShape:     req.ModuleShape,
+		BackgroundColor: req.BackgroundColor,
+		ForegroundColor: req.ForegroundColor,
 	})
 	if err != nil {
 		w.Header().Set("Content-Type", "application/json")

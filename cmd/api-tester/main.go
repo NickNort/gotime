@@ -51,8 +51,14 @@ func main() {
 	// Test POST /health (should fail)
 	results = append(results, testHealthPOST(client, *baseURL))
 
-	// Test POST /qr success
+	// Test POST /qr success (default colors)
 	results = append(results, testQRSuccess(client, *baseURL))
+
+	// Test POST /qr with custom colors
+	results = append(results, testQRCustomColors(client, *baseURL))
+
+	// Test POST /qr with partial custom colors
+	results = append(results, testQRPartialColors(client, *baseURL))
 
 	// Test POST /qr missing content
 	results = append(results, testQRMissingContent(client, *baseURL))
@@ -156,7 +162,7 @@ func testHealthPOST(client *http.Client, baseURL string) TestResult {
 }
 
 func testQRSuccess(client *http.Client, baseURL string) TestResult {
-	name := "POST /qr (success)"
+	name := "POST /qr (success with default colors)"
 	reqBody := `{"content":"https://example.com"}`
 	resp, err := client.Post(baseURL+"/qr", "application/json", strings.NewReader(reqBody))
 	if err != nil {
@@ -183,13 +189,103 @@ func testQRSuccess(client *http.Client, baseURL string) TestResult {
 		return TestResult{Name: name, Passed: false, Error: "Response body does not contain <svg"}
 	}
 
-	// Check for required colors (workspace rule)
+	// Check for default colors (workspace rule)
 	if !strings.Contains(bodyStr, "#552048") {
-		return TestResult{Name: name, Passed: false, Error: "SVG does not contain foreground color #552048"}
+		return TestResult{Name: name, Passed: false, Error: "SVG does not contain default foreground color #552048"}
 	}
 
 	if !strings.Contains(bodyStr, "#f8f2ec") {
-		return TestResult{Name: name, Passed: false, Error: "SVG does not contain background color #f8f2ec"}
+		return TestResult{Name: name, Passed: false, Error: "SVG does not contain default background color #f8f2ec"}
+	}
+
+	return TestResult{Name: name, Passed: true}
+}
+
+func testQRCustomColors(client *http.Client, baseURL string) TestResult {
+	name := "POST /qr (custom colors)"
+	reqBody := `{"content":"https://example.com","background_color":"#ffffff","foreground_color":"#000000"}`
+	resp, err := client.Post(baseURL+"/qr", "application/json", strings.NewReader(reqBody))
+	if err != nil {
+		return TestResult{Name: name, Passed: false, Error: fmt.Sprintf("Request failed: %v", err)}
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return TestResult{Name: name, Passed: false, Error: fmt.Sprintf("Expected 200, got %d", resp.StatusCode)}
+	}
+
+	contentType := resp.Header.Get("Content-Type")
+	if !strings.HasPrefix(contentType, "image/svg+xml") {
+		return TestResult{Name: name, Passed: false, Error: fmt.Sprintf("Expected Content-Type image/svg+xml, got %s", contentType)}
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return TestResult{Name: name, Passed: false, Error: fmt.Sprintf("Failed to read body: %v", err)}
+	}
+
+	bodyStr := string(body)
+	if !strings.Contains(bodyStr, "<svg") {
+		return TestResult{Name: name, Passed: false, Error: "Response body does not contain <svg"}
+	}
+
+	// Check for custom colors
+	if !strings.Contains(bodyStr, "#000000") {
+		return TestResult{Name: name, Passed: false, Error: "SVG does not contain custom foreground color #000000"}
+	}
+
+	if !strings.Contains(bodyStr, "#ffffff") {
+		return TestResult{Name: name, Passed: false, Error: "SVG does not contain custom background color #ffffff"}
+	}
+
+	// Verify default colors are NOT present
+	if strings.Contains(bodyStr, "#552048") {
+		return TestResult{Name: name, Passed: false, Error: "SVG still contains default foreground color #552048 instead of custom color"}
+	}
+
+	if strings.Contains(bodyStr, "#f8f2ec") {
+		return TestResult{Name: name, Passed: false, Error: "SVG still contains default background color #f8f2ec instead of custom color"}
+	}
+
+	return TestResult{Name: name, Passed: true}
+}
+
+func testQRPartialColors(client *http.Client, baseURL string) TestResult {
+	name := "POST /qr (partial custom colors - only foreground)"
+	reqBody := `{"content":"https://example.com","foreground_color":"#ff0000"}`
+	resp, err := client.Post(baseURL+"/qr", "application/json", strings.NewReader(reqBody))
+	if err != nil {
+		return TestResult{Name: name, Passed: false, Error: fmt.Sprintf("Request failed: %v", err)}
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		return TestResult{Name: name, Passed: false, Error: fmt.Sprintf("Expected 200, got %d", resp.StatusCode)}
+	}
+
+	contentType := resp.Header.Get("Content-Type")
+	if !strings.HasPrefix(contentType, "image/svg+xml") {
+		return TestResult{Name: name, Passed: false, Error: fmt.Sprintf("Expected Content-Type image/svg+xml, got %s", contentType)}
+	}
+
+	body, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return TestResult{Name: name, Passed: false, Error: fmt.Sprintf("Failed to read body: %v", err)}
+	}
+
+	bodyStr := string(body)
+	if !strings.Contains(bodyStr, "<svg") {
+		return TestResult{Name: name, Passed: false, Error: "Response body does not contain <svg"}
+	}
+
+	// Check for custom foreground color
+	if !strings.Contains(bodyStr, "#ff0000") {
+		return TestResult{Name: name, Passed: false, Error: "SVG does not contain custom foreground color #ff0000"}
+	}
+
+	// Check for default background color (should still be used)
+	if !strings.Contains(bodyStr, "#f8f2ec") {
+		return TestResult{Name: name, Passed: false, Error: "SVG does not contain default background color #f8f2ec"}
 	}
 
 	return TestResult{Name: name, Passed: true}
