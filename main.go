@@ -1,8 +1,11 @@
 package main
 
 import (
-	"flag"
+	"bytes"
+	"encoding/json"
 	"fmt"
+	"log"
+	"net/http"
 	"os"
 
 	svg "github.com/ajstarks/svgo"
@@ -22,6 +25,19 @@ type CornerBounds struct {
 	TopLeft    CornerRect
 	TopRight   CornerRect
 	BottomLeft CornerRect
+}
+
+// QRRequest represents the JSON request body for QR code generation
+type QRRequest struct {
+	Content      string `json:"content"`
+	FinderCenter string `json:"finder_center,omitempty"`
+	FinderFrame  string `json:"finder_frame,omitempty"`
+	ModuleShape  string `json:"module_shape,omitempty"`
+}
+
+// ErrorResponse represents an error response in JSON format
+type ErrorResponse struct {
+	Error string `json:"error"`
 }
 
 // isFinderPattern checks if a 7x7 region starting at (x, y) matches a QR code finder pattern
@@ -331,169 +347,34 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 	canvas.End()
 }
 
-func main() {
-	// Parse command line flags
-	cornerCenter := flag.String("finder-center", "square", "Corner center style: 'circle', 'square', or 'diamond'")
-	finderFrame := flag.String("finder-frame", "square", "Finder frame style: 'square', 'rounded', 'circle', or 'diamond'")
-	moduleShape := flag.String("module-shape", "rounded", "Module shape: 'square', 'rounded', 'circle', or 'diamond'")
-
-	// Shorthand flags (aliases)
-	flag.StringVar(cornerCenter, "c", "square", "Shorthand for -finder-center")
-	flag.StringVar(finderFrame, "f", "square", "Shorthand for -finder-frame")
-	flag.StringVar(moduleShape, "m", "rounded", "Shorthand for -module-shape")
-
-	// Parse flags (this stops at first positional arg)
-	flag.Parse()
-
-	// Manually check for flags that come after positional args
-	// Go's flag package stops at first positional arg, so flags after are included in flag.Args()
-	parsedArgs := flag.Args() // Args that flag.Parse() considered positional (includes flags after first pos arg)
-
-	var qrContent string
-	var positionalArgs []string
-
-	// Parse remaining arguments to handle flags and positional args in any order
-	skipNext := false
-	for i := 0; i < len(parsedArgs); i++ {
-		if skipNext {
-			skipNext = false
-			continue
-		}
-
-		arg := parsedArgs[i]
-
-		// Check if this is a flag
-		if len(arg) > 0 && arg[0] == '-' {
-			// Handle -flag=value format
-			if len(arg) >= 16 && arg[:16] == "-finder-center=" {
-				value := arg[16:]
-				if value == "" {
-					fmt.Fprintf(os.Stderr, "Error: finder-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
-					os.Exit(1)
-				}
-				*cornerCenter = value
-				continue
-			} else if len(arg) >= 3 && arg[:3] == "-c=" {
-				value := arg[3:]
-				if value == "" {
-					fmt.Fprintf(os.Stderr, "Error: finder-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
-					os.Exit(1)
-				}
-				*cornerCenter = value
-				continue
-			} else if len(arg) >= 14 && arg[:14] == "-finder-frame=" {
-				value := arg[14:]
-				if value == "" {
-					fmt.Fprintf(os.Stderr, "Error: finder-frame cannot be empty. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
-					os.Exit(1)
-				}
-				*finderFrame = value
-				continue
-			} else if len(arg) >= 3 && arg[:3] == "-f=" {
-				value := arg[3:]
-				if value == "" {
-					fmt.Fprintf(os.Stderr, "Error: finder-frame cannot be empty. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
-					os.Exit(1)
-				}
-				*finderFrame = value
-				continue
-			} else if len(arg) >= 14 && arg[:14] == "-module-shape=" {
-				value := arg[14:]
-				if value == "" {
-					fmt.Fprintf(os.Stderr, "Error: module-shape cannot be empty. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
-					os.Exit(1)
-				}
-				*moduleShape = value
-				continue
-			} else if len(arg) >= 3 && arg[:3] == "-m=" {
-				value := arg[3:]
-				if value == "" {
-					fmt.Fprintf(os.Stderr, "Error: module-shape cannot be empty. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
-					os.Exit(1)
-				}
-				*moduleShape = value
-				continue
-			}
-
-			// Handle -flag value format
-			if arg == "-finder-center" || arg == "-c" {
-				if i+1 >= len(parsedArgs) {
-					fmt.Fprintf(os.Stderr, "Error: finder-center requires a value. Must be 'circle', 'square', or 'diamond'\n")
-					os.Exit(1)
-				}
-				value := parsedArgs[i+1]
-				if value == "" || (len(value) > 0 && value[0] == '-') {
-					fmt.Fprintf(os.Stderr, "Error: finder-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
-					os.Exit(1)
-				}
-				*cornerCenter = value
-				skipNext = true
-				continue
-			} else if arg == "-finder-frame" || arg == "-f" {
-				if i+1 >= len(parsedArgs) {
-					fmt.Fprintf(os.Stderr, "Error: finder-frame requires a value. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
-					os.Exit(1)
-				}
-				value := parsedArgs[i+1]
-				if value == "" || (len(value) > 0 && value[0] == '-') {
-					fmt.Fprintf(os.Stderr, "Error: finder-frame cannot be empty. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
-					os.Exit(1)
-				}
-				*finderFrame = value
-				skipNext = true
-				continue
-			} else if arg == "-module-shape" || arg == "-m" {
-				if i+1 >= len(parsedArgs) {
-					fmt.Fprintf(os.Stderr, "Error: module-shape requires a value. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
-					os.Exit(1)
-				}
-				value := parsedArgs[i+1]
-				if value == "" || (len(value) > 0 && value[0] == '-') {
-					fmt.Fprintf(os.Stderr, "Error: module-shape cannot be empty. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
-					os.Exit(1)
-				}
-				*moduleShape = value
-				skipNext = true
-				continue
-			}
-		}
-
-		// This is a positional argument
-		positionalArgs = append(positionalArgs, arg)
+// generateQRCodeSVG generates a QR code and returns the SVG as bytes
+func generateQRCodeSVG(content string, finderCenter string, finderFrame string, moduleShape string) ([]byte, error) {
+	// Set defaults
+	if finderCenter == "" {
+		finderCenter = "square"
+	}
+	if finderFrame == "" {
+		finderFrame = "square"
+	}
+	if moduleShape == "" {
+		moduleShape = "rounded"
 	}
 
-	// Validate corner center style (must be done before using it)
-	// Check for empty string explicitly, then check valid values
-	if *cornerCenter == "" {
-		fmt.Fprintf(os.Stderr, "Error: finder-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
-		os.Exit(1)
+	// Validate parameters
+	if finderCenter != "circle" && finderCenter != "square" && finderCenter != "diamond" {
+		return nil, fmt.Errorf("finder-center must be either 'circle', 'square', or 'diamond' (got: %q)", finderCenter)
 	}
-	if *cornerCenter != "circle" && *cornerCenter != "square" && *cornerCenter != "diamond" {
-		fmt.Fprintf(os.Stderr, "Error: finder-center must be either 'circle', 'square', or 'diamond' (got: %q)\n", *cornerCenter)
-		os.Exit(1)
+	if finderFrame != "square" && finderFrame != "rounded" && finderFrame != "circle" && finderFrame != "diamond" {
+		return nil, fmt.Errorf("finder-frame must be either 'square', 'rounded', 'circle', or 'diamond' (got: %q)", finderFrame)
 	}
-
-	// Validate finder frame style
-	if *finderFrame != "square" && *finderFrame != "rounded" && *finderFrame != "circle" && *finderFrame != "diamond" {
-		panic("finder-frame must be either 'square', 'rounded', 'circle', or 'diamond'")
+	if moduleShape != "square" && moduleShape != "rounded" && moduleShape != "circle" && moduleShape != "diamond" {
+		return nil, fmt.Errorf("module-shape must be either 'square', 'rounded', 'circle', or 'diamond' (got: %q)", moduleShape)
 	}
-
-	// Validate module shape style
-	if *moduleShape != "square" && *moduleShape != "rounded" && *moduleShape != "circle" && *moduleShape != "diamond" {
-		panic("module-shape must be either 'square', 'rounded', 'circle', or 'diamond'")
-	}
-
-	// Get QR code content from positional argument
-	if len(positionalArgs) == 0 {
-		fmt.Fprintf(os.Stderr, "Usage: %s <qr-content> [-finder-center=<style>] [-finder-frame=<style>] [-module-shape=<style>]\n", os.Args[0])
-		os.Exit(1)
-	}
-	qrContent = positionalArgs[0]
 
 	// Generate QR code
-	q, err := qrcode.New(qrContent, qrcode.Highest)
+	q, err := qrcode.New(content, qrcode.Highest)
 	if err != nil {
-		panic(err)
+		return nil, fmt.Errorf("failed to generate QR code: %w", err)
 	}
 
 	// Access the bitmap - this is the data matrix
@@ -503,17 +384,103 @@ func main() {
 	// Find corner finder patterns
 	corners := findCorners(bitmap)
 
-	// Create output file
-	f, err := os.Create("qr.svg")
-	if err != nil {
-		panic(err)
-	}
-	defer f.Close()
+	// Create buffer to capture SVG output
+	var buf bytes.Buffer
 
 	// Create SVG canvas
-	canvas := svg.New(f)
+	canvas := svg.New(&buf)
 
 	// Render QR code as SVG
 	moduleSize := 10 // Size of each module in pixels
-	renderQR(bitmap, moduleSize, canvas, corners, *cornerCenter, *finderFrame, *moduleShape)
+	renderQR(bitmap, moduleSize, canvas, corners, finderCenter, finderFrame, moduleShape)
+
+	return buf.Bytes(), nil
+}
+
+// handleQR handles POST requests to /qr endpoint
+func handleQR(w http.ResponseWriter, r *http.Request) {
+	// Only accept POST requests
+	if r.Method != http.MethodPost {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		json.NewEncoder(w).Encode(ErrorResponse{
+			Error: "Method not allowed. Use POST",
+		})
+		return
+	}
+
+	// Parse JSON request body
+	var req QRRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{
+			Error: fmt.Sprintf("Invalid JSON: %v", err),
+		})
+		return
+	}
+
+	// Validate required field
+	if req.Content == "" {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{
+			Error: "content field is required",
+		})
+		return
+	}
+
+	// Generate QR code SVG
+	svgBytes, err := generateQRCodeSVG(req.Content, req.FinderCenter, req.FinderFrame, req.ModuleShape)
+	if err != nil {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(ErrorResponse{
+			Error: err.Error(),
+		})
+		return
+	}
+
+	// Return SVG with proper content type
+	w.Header().Set("Content-Type", "image/svg+xml")
+	w.WriteHeader(http.StatusOK)
+	w.Write(svgBytes)
+}
+
+// handleHealth handles GET requests to /health endpoint
+func handleHealth(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodGet {
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusMethodNotAllowed)
+		json.NewEncoder(w).Encode(ErrorResponse{
+			Error: "Method not allowed. Use GET",
+		})
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(map[string]string{
+		"status": "ok",
+	})
+}
+
+func main() {
+	// Get port from environment variable, default to 8080
+	port := os.Getenv("PORT")
+	if port == "" {
+		port = "8080"
+	}
+
+	// Register HTTP handlers
+	http.HandleFunc("/qr", handleQR)
+	http.HandleFunc("/health", handleHealth)
+
+	// Start HTTP server
+	log.Printf("Starting HTTP server on port %s", port)
+	log.Printf("POST /qr - Generate QR code")
+	log.Printf("GET /health - Health check")
+	if err := http.ListenAndServe(":"+port, nil); err != nil {
+		log.Fatalf("Failed to start server: %v", err)
+	}
 }
