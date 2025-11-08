@@ -206,7 +206,7 @@ func isCornerInnerCenter(x, y int, corner *CornerRect) bool {
 	return relX >= 2 && relX <= 4 && relY >= 2 && relY <= 4
 }
 
-func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBounds, cornerCenterStyle string, finderFrameStyle string) {
+func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBounds, cornerCenterStyle string, finderFrameStyle string, moduleShape string) {
 	size := len(bitmap) * moduleSize
 
 	// Start SVG
@@ -216,29 +216,62 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 	canvas.Rect(0, 0, size, size, "fill:#f8f2ec")
 
 	// First pass: render all non-corner modules normally
-	for y := 0; y < len(bitmap); y++ {
-		x := 0
-		for x < len(bitmap[y]) {
-			if bitmap[y][x] && !isInCorner(x, y, corners) {
-				// Found start of a dark run (not in corner)
-				startX := x
+	switch moduleShape {
+	case "circle", "diamond":
+		// Render each module individually for circle and diamond shapes
+		for y := 0; y < len(bitmap); y++ {
+			for x := 0; x < len(bitmap[y]); x++ {
+				if bitmap[y][x] && !isInCorner(x, y, corners) {
+					xPos := x * moduleSize
+					yPos := y * moduleSize
+					centerX := xPos + moduleSize/2
+					centerY := yPos + moduleSize/2
+					radius := moduleSize / 2
 
-				// Count consecutive dark modules (not in corners)
-				for x < len(bitmap[y]) && bitmap[y][x] && !isInCorner(x, y, corners) {
+					if moduleShape == "circle" {
+						canvas.Circle(centerX, centerY, radius, "fill:#552048")
+					} else { // diamond
+						halfSize := moduleSize / 2
+						path := fmt.Sprintf("M %d,%d L %d,%d L %d,%d L %d,%d Z",
+							centerX, centerY-halfSize, // Top
+							centerX+halfSize, centerY, // Right
+							centerX, centerY+halfSize, // Bottom
+							centerX-halfSize, centerY) // Left
+						canvas.Path(path, "fill:#552048")
+					}
+				}
+			}
+		}
+	default:
+		// Render grouped modules for rounded and square shapes
+		for y := 0; y < len(bitmap); y++ {
+			x := 0
+			for x < len(bitmap[y]) {
+				if bitmap[y][x] && !isInCorner(x, y, corners) {
+					// Found start of a dark run (not in corner)
+					startX := x
+
+					// Count consecutive dark modules (not in corners)
+					for x < len(bitmap[y]) && bitmap[y][x] && !isInCorner(x, y, corners) {
+						x++
+					}
+					endX := x
+
+					// Draw one shape for the entire run
+					width := (endX - startX) * moduleSize
+					height := moduleSize
+					xPos := startX * moduleSize
+					yPos := y * moduleSize
+
+					if moduleShape == "rounded" {
+						radius := moduleSize / 4
+						canvas.Roundrect(xPos, yPos, width, height, radius, radius, "fill:#552048")
+					} else { // square
+						canvas.Rect(xPos, yPos, width, height, "fill:#552048")
+					}
+				} else {
 					x++
 				}
-				endX := x
-
-				// Draw one rounded rectangle for the entire run
-				width := (endX - startX) * moduleSize
-				height := moduleSize
-				xPos := startX * moduleSize
-				yPos := y * moduleSize
-				radius := moduleSize / 4
-
-				canvas.Roundrect(xPos, yPos, width, height, radius, radius, "fill:#552048")
-			} else {
-				x++
 			}
 		}
 	}
@@ -344,6 +377,7 @@ func main() {
 	// Parse command line flags
 	cornerCenter := flag.String("corner-center", "square", "Corner center style: 'circle', 'square', or 'diamond'")
 	finderFrame := flag.String("finder-frame", "square", "Finder frame style: 'square', 'rounded', 'circle', or 'diamond'")
+	moduleShape := flag.String("module-shape", "rounded", "Module shape: 'square', 'rounded', 'circle', or 'diamond'")
 	flag.Parse()
 
 	// Validate corner center style
@@ -354,6 +388,11 @@ func main() {
 	// Validate finder frame style
 	if *finderFrame != "square" && *finderFrame != "rounded" && *finderFrame != "circle" && *finderFrame != "diamond" {
 		panic("finder-frame must be either 'square', 'rounded', 'circle', or 'diamond'")
+	}
+
+	// Validate module shape style
+	if *moduleShape != "square" && *moduleShape != "rounded" && *moduleShape != "circle" && *moduleShape != "diamond" {
+		panic("module-shape must be either 'square', 'rounded', 'circle', or 'diamond'")
 	}
 
 	// Generate QR code
@@ -381,5 +420,5 @@ func main() {
 
 	// Render QR code as SVG
 	moduleSize := 10 // Size of each module in pixels
-	renderQR(bitmap, moduleSize, canvas, corners, *cornerCenter, *finderFrame)
+	renderQR(bitmap, moduleSize, canvas, corners, *cornerCenter, *finderFrame, *moduleShape)
 }
