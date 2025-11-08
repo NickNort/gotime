@@ -16,6 +16,7 @@ type QRRequest struct {
 	FinderCenter    string `json:"finder_center,omitempty"`
 	FinderFrame     string `json:"finder_frame,omitempty"`
 	ModuleShape     string `json:"module_shape,omitempty"`
+	ModuleConnect   string `json:"module_connect,omitempty"`
 	BackgroundColor string `json:"background_color,omitempty"`
 	ForegroundColor string `json:"foreground_color,omitempty"`
 }
@@ -63,6 +64,7 @@ func handleQR(w http.ResponseWriter, r *http.Request) {
 		FinderCenter:    req.FinderCenter,
 		FinderFrame:     req.FinderFrame,
 		ModuleShape:     req.ModuleShape,
+		ModuleConnect:   req.ModuleConnect,
 		BackgroundColor: req.BackgroundColor,
 		ForegroundColor: req.ForegroundColor,
 	})
