@@ -206,7 +206,7 @@ func isCornerInnerCenter(x, y int, corner *CornerRect) bool {
 	return relX >= 2 && relX <= 4 && relY >= 2 && relY <= 4
 }
 
-func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBounds, cornerCenterStyle string, finderFrameStyle string) {
+func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBounds, cornerCenterStyle string, finderFrameStyle string, moduleShape string) {
 	size := len(bitmap) * moduleSize
 
 	// Start SVG
@@ -216,29 +216,62 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 	canvas.Rect(0, 0, size, size, "fill:#f8f2ec")
 
 	// First pass: render all non-corner modules normally
-	for y := 0; y < len(bitmap); y++ {
-		x := 0
-		for x < len(bitmap[y]) {
-			if bitmap[y][x] && !isInCorner(x, y, corners) {
-				// Found start of a dark run (not in corner)
-				startX := x
+	switch moduleShape {
+	case "circle", "diamond":
+		// Render each module individually for circle and diamond shapes
+		for y := 0; y < len(bitmap); y++ {
+			for x := 0; x < len(bitmap[y]); x++ {
+				if bitmap[y][x] && !isInCorner(x, y, corners) {
+					xPos := x * moduleSize
+					yPos := y * moduleSize
+					centerX := xPos + moduleSize/2
+					centerY := yPos + moduleSize/2
+					radius := moduleSize / 2
 
-				// Count consecutive dark modules (not in corners)
-				for x < len(bitmap[y]) && bitmap[y][x] && !isInCorner(x, y, corners) {
+					if moduleShape == "circle" {
+						canvas.Circle(centerX, centerY, radius, "fill:#552048")
+					} else { // diamond
+						halfSize := moduleSize / 2
+						path := fmt.Sprintf("M %d,%d L %d,%d L %d,%d L %d,%d Z",
+							centerX, centerY-halfSize, // Top
+							centerX+halfSize, centerY, // Right
+							centerX, centerY+halfSize, // Bottom
+							centerX-halfSize, centerY) // Left
+						canvas.Path(path, "fill:#552048")
+					}
+				}
+			}
+		}
+	default:
+		// Render grouped modules for rounded and square shapes
+		for y := 0; y < len(bitmap); y++ {
+			x := 0
+			for x < len(bitmap[y]) {
+				if bitmap[y][x] && !isInCorner(x, y, corners) {
+					// Found start of a dark run (not in corner)
+					startX := x
+
+					// Count consecutive dark modules (not in corners)
+					for x < len(bitmap[y]) && bitmap[y][x] && !isInCorner(x, y, corners) {
+						x++
+					}
+					endX := x
+
+					// Draw one shape for the entire run
+					width := (endX - startX) * moduleSize
+					height := moduleSize
+					xPos := startX * moduleSize
+					yPos := y * moduleSize
+
+					if moduleShape == "rounded" {
+						radius := moduleSize / 4
+						canvas.Roundrect(xPos, yPos, width, height, radius, radius, "fill:#552048")
+					} else { // square
+						canvas.Rect(xPos, yPos, width, height, "fill:#552048")
+					}
+				} else {
 					x++
 				}
-				endX := x
-
-				// Draw one rounded rectangle for the entire run
-				width := (endX - startX) * moduleSize
-				height := moduleSize
-				xPos := startX * moduleSize
-				yPos := y * moduleSize
-				radius := moduleSize / 4
-
-				canvas.Roundrect(xPos, yPos, width, height, radius, radius, "fill:#552048")
-			} else {
-				x++
 			}
 		}
 	}
@@ -342,74 +375,160 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 
 func main() {
 	// Parse command line flags
-	cornerCenter := flag.String("corner-center", "square", "Corner center style: 'circle', 'square', or 'diamond'")
+	cornerCenter := flag.String("finder-center", "square", "Corner center style: 'circle', 'square', or 'diamond'")
 	finderFrame := flag.String("finder-frame", "square", "Finder frame style: 'square', 'rounded', 'circle', or 'diamond'")
-	
+	moduleShape := flag.String("module-shape", "rounded", "Module shape: 'square', 'rounded', 'circle', or 'diamond'")
+
+	// Shorthand flags (aliases)
+	flag.StringVar(cornerCenter, "c", "square", "Shorthand for -finder-center")
+	flag.StringVar(finderFrame, "f", "square", "Shorthand for -finder-frame")
+	flag.StringVar(moduleShape, "m", "rounded", "Shorthand for -module-shape")
+
 	// Parse flags (this stops at first positional arg)
 	flag.Parse()
-	
+
 	// Manually check for flags that come after positional args
 	// Go's flag package stops at first positional arg, so flags after are included in flag.Args()
 	parsedArgs := flag.Args() // Args that flag.Parse() considered positional (includes flags after first pos arg)
-	
+
 	var qrContent string
 	var positionalArgs []string
-	
-	// Check parsedArgs for flags (they'll be here if they came after the first positional arg)
-	for i, arg := range parsedArgs {
+
+	// Parse remaining arguments to handle flags and positional args in any order
+	skipNext := false
+	for i := 0; i < len(parsedArgs); i++ {
+		if skipNext {
+			skipNext = false
+			continue
+		}
+
+		arg := parsedArgs[i]
+
+		// Check if this is a flag
 		if len(arg) > 0 && arg[0] == '-' {
-			// Found a flag in the "positional" args
-			if len(arg) >= 15 && arg[:15] == "-corner-center=" {
-				// Extract value from flag
-				value := arg[15:]
+			// Handle -flag=value format
+			if len(arg) >= 16 && arg[:16] == "-finder-center=" {
+				value := arg[16:]
 				if value == "" {
-					fmt.Fprintf(os.Stderr, "Error: corner-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
+					fmt.Fprintf(os.Stderr, "Error: finder-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
 					os.Exit(1)
 				}
 				*cornerCenter = value
-				// Positional args are everything before this flag
-				positionalArgs = parsedArgs[:i]
-				break
-			} else if arg == "-corner-center" && i+1 < len(parsedArgs) {
-				// Flag without =, next arg is value
+				continue
+			} else if len(arg) >= 3 && arg[:3] == "-c=" {
+				value := arg[3:]
+				if value == "" {
+					fmt.Fprintf(os.Stderr, "Error: finder-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
+					os.Exit(1)
+				}
+				*cornerCenter = value
+				continue
+			} else if len(arg) >= 14 && arg[:14] == "-finder-frame=" {
+				value := arg[14:]
+				if value == "" {
+					fmt.Fprintf(os.Stderr, "Error: finder-frame cannot be empty. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
+					os.Exit(1)
+				}
+				*finderFrame = value
+				continue
+			} else if len(arg) >= 3 && arg[:3] == "-f=" {
+				value := arg[3:]
+				if value == "" {
+					fmt.Fprintf(os.Stderr, "Error: finder-frame cannot be empty. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
+					os.Exit(1)
+				}
+				*finderFrame = value
+				continue
+			} else if len(arg) >= 14 && arg[:14] == "-module-shape=" {
+				value := arg[14:]
+				if value == "" {
+					fmt.Fprintf(os.Stderr, "Error: module-shape cannot be empty. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
+					os.Exit(1)
+				}
+				*moduleShape = value
+				continue
+			} else if len(arg) >= 3 && arg[:3] == "-m=" {
+				value := arg[3:]
+				if value == "" {
+					fmt.Fprintf(os.Stderr, "Error: module-shape cannot be empty. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
+					os.Exit(1)
+				}
+				*moduleShape = value
+				continue
+			}
+
+			// Handle -flag value format
+			if arg == "-finder-center" || arg == "-c" {
+				if i+1 >= len(parsedArgs) {
+					fmt.Fprintf(os.Stderr, "Error: finder-center requires a value. Must be 'circle', 'square', or 'diamond'\n")
+					os.Exit(1)
+				}
 				value := parsedArgs[i+1]
-				if value == "" {
-					fmt.Fprintf(os.Stderr, "Error: corner-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
+				if value == "" || (len(value) > 0 && value[0] == '-') {
+					fmt.Fprintf(os.Stderr, "Error: finder-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
 					os.Exit(1)
 				}
 				*cornerCenter = value
-				// Positional args are everything before this flag
-				positionalArgs = parsedArgs[:i]
-				break
+				skipNext = true
+				continue
+			} else if arg == "-finder-frame" || arg == "-f" {
+				if i+1 >= len(parsedArgs) {
+					fmt.Fprintf(os.Stderr, "Error: finder-frame requires a value. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
+					os.Exit(1)
+				}
+				value := parsedArgs[i+1]
+				if value == "" || (len(value) > 0 && value[0] == '-') {
+					fmt.Fprintf(os.Stderr, "Error: finder-frame cannot be empty. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
+					os.Exit(1)
+				}
+				*finderFrame = value
+				skipNext = true
+				continue
+			} else if arg == "-module-shape" || arg == "-m" {
+				if i+1 >= len(parsedArgs) {
+					fmt.Fprintf(os.Stderr, "Error: module-shape requires a value. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
+					os.Exit(1)
+				}
+				value := parsedArgs[i+1]
+				if value == "" || (len(value) > 0 && value[0] == '-') {
+					fmt.Fprintf(os.Stderr, "Error: module-shape cannot be empty. Must be 'square', 'rounded', 'circle', or 'diamond'\n")
+					os.Exit(1)
+				}
+				*moduleShape = value
+				skipNext = true
+				continue
 			}
 		}
-	}
-	
-	// If no flag found in parsedArgs, use all parsedArgs as positional
-	if len(positionalArgs) == 0 {
-		positionalArgs = parsedArgs
+
+		// This is a positional argument
+		positionalArgs = append(positionalArgs, arg)
 	}
 
 	// Validate corner center style (must be done before using it)
 	// Check for empty string explicitly, then check valid values
 	if *cornerCenter == "" {
-		fmt.Fprintf(os.Stderr, "Error: corner-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
+		fmt.Fprintf(os.Stderr, "Error: finder-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
 		os.Exit(1)
 	}
 	if *cornerCenter != "circle" && *cornerCenter != "square" && *cornerCenter != "diamond" {
-		fmt.Fprintf(os.Stderr, "Error: corner-center must be either 'circle', 'square', or 'diamond' (got: %q)\n", *cornerCenter)
-		os.Exit(1)
-	}
-
-	// Get QR code content from positional argument
-	if len(positionalArgs) == 0 {
-		fmt.Fprintf(os.Stderr, "Usage: %s <qr-content> [-corner-center=<style>]\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Error: finder-center must be either 'circle', 'square', or 'diamond' (got: %q)\n", *cornerCenter)
 		os.Exit(1)
 	}
 
 	// Validate finder frame style
 	if *finderFrame != "square" && *finderFrame != "rounded" && *finderFrame != "circle" && *finderFrame != "diamond" {
 		panic("finder-frame must be either 'square', 'rounded', 'circle', or 'diamond'")
+	}
+
+	// Validate module shape style
+	if *moduleShape != "square" && *moduleShape != "rounded" && *moduleShape != "circle" && *moduleShape != "diamond" {
+		panic("module-shape must be either 'square', 'rounded', 'circle', or 'diamond'")
+	}
+
+	// Get QR code content from positional argument
+	if len(positionalArgs) == 0 {
+		fmt.Fprintf(os.Stderr, "Usage: %s <qr-content> [-finder-center=<style>] [-finder-frame=<style>] [-module-shape=<style>]\n", os.Args[0])
+		os.Exit(1)
 	}
 	qrContent = positionalArgs[0]
 
@@ -438,5 +557,5 @@ func main() {
 
 	// Render QR code as SVG
 	moduleSize := 10 // Size of each module in pixels
-	renderQR(bitmap, moduleSize, canvas, corners, *cornerCenter, *finderFrame)
+	renderQR(bitmap, moduleSize, canvas, corners, *cornerCenter, *finderFrame, *moduleShape)
 }
