@@ -206,7 +206,7 @@ func isCornerInnerCenter(x, y int, corner *CornerRect) bool {
 	return relX >= 2 && relX <= 4 && relY >= 2 && relY <= 4
 }
 
-func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBounds, cornerCenterStyle string) {
+func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBounds, cornerCenterStyle string, finderFrameStyle string) {
 	size := len(bitmap) * moduleSize
 
 	// Start SVG
@@ -249,16 +249,61 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 		cornerX := corner.X * moduleSize
 		cornerY := corner.Y * moduleSize
 
-		// Render outer frame as a connected square frame (with gap for inner ring)
+		// Render outer frame based on finderFrameStyle
 		// The outer frame consists of the border (positions 0 and 6 on all edges)
-		// Top bar: full width (row 0, positions 0-6)
-		canvas.Rect(cornerX, cornerY, 7*moduleSize, moduleSize, "fill:#552048")
-		// Bottom bar: full width (row 6, positions 0-6)
-		canvas.Rect(cornerX, cornerY+6*moduleSize, 7*moduleSize, moduleSize, "fill:#552048")
-		// Left edge: full height (position 0, rows 0-6) - this creates the connected frame
-		canvas.Rect(cornerX, cornerY, moduleSize, 7*moduleSize, "fill:#552048")
-		// Right edge: full height (position 6, rows 0-6) - this creates the connected frame
-		canvas.Rect(cornerX+6*moduleSize, cornerY, moduleSize, 7*moduleSize, "fill:#552048")
+		frameSize := 7 * moduleSize
+		frameThickness := moduleSize
+		switch finderFrameStyle {
+		case "rounded":
+			// Render as a rounded rectangle frame
+			// Draw outer rounded rectangle, then subtract inner area
+			radius := moduleSize / 2
+			// Outer rounded rectangle
+			canvas.Roundrect(cornerX, cornerY, frameSize, frameSize, radius, radius, "fill:#552048")
+			// Inner rounded rectangle (subtract by drawing background color)
+			innerSize := 5 * moduleSize // Inner size is 5x5 (positions 1-5)
+			innerX := cornerX + moduleSize
+			innerY := cornerY + moduleSize
+			canvas.Roundrect(innerX, innerY, innerSize, innerSize, radius, radius, "fill:#f8f2ec")
+		case "circle":
+			// Render as a circular frame
+			centerCX := cornerX + frameSize/2
+			centerCY := cornerY + frameSize/2
+			outerRadius := frameSize / 2
+			innerRadius := (5 * moduleSize) / 2 // Inner radius for 5x5 area
+			// Draw outer circle
+			canvas.Circle(centerCX, centerCY, outerRadius, "fill:#552048")
+			// Subtract inner circle
+			canvas.Circle(centerCX, centerCY, innerRadius, "fill:#f8f2ec")
+		case "diamond":
+			// Render as a diamond-shaped frame
+			centerCX := cornerX + frameSize/2
+			centerCY := cornerY + frameSize/2
+			// Outer diamond path (covers 7x7 area)
+			outerPath := fmt.Sprintf("M %d,%d L %d,%d L %d,%d L %d,%d Z",
+				centerCX, cornerY, // Top
+				cornerX+frameSize, centerCY, // Right
+				centerCX, cornerY+frameSize, // Bottom
+				cornerX, centerCY) // Left
+			canvas.Path(outerPath, "fill:#552048")
+			// Inner diamond path (subtract 5x5 area by drawing background color)
+			innerPath := fmt.Sprintf("M %d,%d L %d,%d L %d,%d L %d,%d Z",
+				centerCX, cornerY+moduleSize, // Top
+				cornerX+6*moduleSize, centerCY, // Right
+				centerCX, cornerY+6*moduleSize, // Bottom
+				cornerX+moduleSize, centerCY) // Left
+			canvas.Path(innerPath, "fill:#f8f2ec")
+		default:
+			// Render as a square frame (default)
+			// Top bar: full width (row 0, positions 0-6)
+			canvas.Rect(cornerX, cornerY, frameSize, frameThickness, "fill:#552048")
+			// Bottom bar: full width (row 6, positions 0-6)
+			canvas.Rect(cornerX, cornerY+6*moduleSize, frameSize, frameThickness, "fill:#552048")
+			// Left edge: full height (position 0, rows 0-6)
+			canvas.Rect(cornerX, cornerY, frameThickness, frameSize, "fill:#552048")
+			// Right edge: full height (position 6, rows 0-6)
+			canvas.Rect(cornerX+6*moduleSize, cornerY, frameThickness, frameSize, "fill:#552048")
+		}
 
 		// Render inner center as either a circle, square, or diamond (positions 2-4, 3x3 block)
 		centerX := cornerX + 2*moduleSize
@@ -298,11 +343,17 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 func main() {
 	// Parse command line flags
 	cornerCenter := flag.String("corner-center", "square", "Corner center style: 'circle', 'square', or 'diamond'")
+	finderFrame := flag.String("finder-frame", "square", "Finder frame style: 'square', 'rounded', 'circle', or 'diamond'")
 	flag.Parse()
 
 	// Validate corner center style
 	if *cornerCenter != "circle" && *cornerCenter != "square" && *cornerCenter != "diamond" {
 		panic("corner-center must be either 'circle', 'square', or 'diamond'")
+	}
+
+	// Validate finder frame style
+	if *finderFrame != "square" && *finderFrame != "rounded" && *finderFrame != "circle" && *finderFrame != "diamond" {
+		panic("finder-frame must be either 'square', 'rounded', 'circle', or 'diamond'")
 	}
 
 	// Generate QR code
@@ -330,5 +381,5 @@ func main() {
 
 	// Render QR code as SVG
 	moduleSize := 10 // Size of each module in pixels
-	renderQR(bitmap, moduleSize, canvas, corners, *cornerCenter)
+	renderQR(bitmap, moduleSize, canvas, corners, *cornerCenter, *finderFrame)
 }
