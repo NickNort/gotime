@@ -1,4 +1,4 @@
-module example.com/hello
+module gotime
 
 go 1.25.4
 
