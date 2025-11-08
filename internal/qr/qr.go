@@ -198,12 +198,14 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 					yPos := y * moduleSize
 					centerX := xPos + moduleSize/2
 					centerY := yPos + moduleSize/2
-					radius := moduleSize / 2
+					// Make circles and diamonds slightly larger (25% increase)
+					radius := int(float64(moduleSize) / 2 * 1.25)
 
 					if moduleShape == "circle" {
 						canvas.Circle(centerX, centerY, radius, "fill:"+fgColor)
 					} else { // diamond
-						halfSize := moduleSize / 2
+						// Make diamonds larger than circles (45% increase)
+						halfSize := int(float64(moduleSize) / 2 * 1.45)
 						path := fmt.Sprintf("M %d,%d L %d,%d L %d,%d L %d,%d Z",
 							centerX, centerY-halfSize, // Top
 							centerX+halfSize, centerY, // Right

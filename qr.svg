@@ -4,338 +4,338 @@
      xmlns="http://www.w3.org/2000/svg"
      xmlns:xlink="http://www.w3.org/1999/xlink">
 <rect x="0" y="0" width="370" height="370" style="fill:#f8f2ec" />
-<path d="M 125,40 L 130,45 L 125,50 L 120,45 Z" style="fill:#552048" />
-<path d="M 145,40 L 150,45 L 145,50 L 140,45 Z" style="fill:#552048" />
-<path d="M 155,40 L 160,45 L 155,50 L 150,45 Z" style="fill:#552048" />
-<path d="M 165,40 L 170,45 L 165,50 L 160,45 Z" style="fill:#552048" />
-<path d="M 175,40 L 180,45 L 175,50 L 170,45 Z" style="fill:#552048" />
-<path d="M 185,40 L 190,45 L 185,50 L 180,45 Z" style="fill:#552048" />
-<path d="M 205,40 L 210,45 L 205,50 L 200,45 Z" style="fill:#552048" />
-<path d="M 245,40 L 250,45 L 245,50 L 240,45 Z" style="fill:#552048" />
-<path d="M 125,50 L 130,55 L 125,60 L 120,55 Z" style="fill:#552048" />
-<path d="M 135,50 L 140,55 L 135,60 L 130,55 Z" style="fill:#552048" />
-<path d="M 155,50 L 160,55 L 155,60 L 150,55 Z" style="fill:#552048" />
-<path d="M 165,50 L 170,55 L 165,60 L 160,55 Z" style="fill:#552048" />
-<path d="M 185,50 L 190,55 L 185,60 L 180,55 Z" style="fill:#552048" />
-<path d="M 245,50 L 250,55 L 245,60 L 240,55 Z" style="fill:#552048" />
-<path d="M 155,60 L 160,65 L 155,70 L 150,65 Z" style="fill:#552048" />
-<path d="M 175,60 L 180,65 L 175,70 L 170,65 Z" style="fill:#552048" />
-<path d="M 185,60 L 190,65 L 185,70 L 180,65 Z" style="fill:#552048" />
-<path d="M 205,60 L 210,65 L 205,70 L 200,65 Z" style="fill:#552048" />
-<path d="M 215,60 L 220,65 L 215,70 L 210,65 Z" style="fill:#552048" />
-<path d="M 125,70 L 130,75 L 125,80 L 120,75 Z" style="fill:#552048" />
-<path d="M 135,70 L 140,75 L 135,80 L 130,75 Z" style="fill:#552048" />
-<path d="M 165,70 L 170,75 L 165,80 L 160,75 Z" style="fill:#552048" />
-<path d="M 175,70 L 180,75 L 175,80 L 170,75 Z" style="fill:#552048" />
-<path d="M 185,70 L 190,75 L 185,80 L 180,75 Z" style="fill:#552048" />
-<path d="M 225,70 L 230,75 L 225,80 L 220,75 Z" style="fill:#552048" />
-<path d="M 235,70 L 240,75 L 235,80 L 230,75 Z" style="fill:#552048" />
-<path d="M 125,80 L 130,85 L 125,90 L 120,85 Z" style="fill:#552048" />
-<path d="M 145,80 L 150,85 L 145,90 L 140,85 Z" style="fill:#552048" />
-<path d="M 155,80 L 160,85 L 155,90 L 150,85 Z" style="fill:#552048" />
-<path d="M 215,80 L 220,85 L 215,90 L 210,85 Z" style="fill:#552048" />
-<path d="M 225,80 L 230,85 L 225,90 L 220,85 Z" style="fill:#552048" />
-<path d="M 125,90 L 130,95 L 125,100 L 120,95 Z" style="fill:#552048" />
-<path d="M 145,90 L 150,95 L 145,100 L 140,95 Z" style="fill:#552048" />
-<path d="M 185,90 L 190,95 L 185,100 L 180,95 Z" style="fill:#552048" />
-<path d="M 215,90 L 220,95 L 215,100 L 210,95 Z" style="fill:#552048" />
-<path d="M 225,90 L 230,95 L 225,100 L 220,95 Z" style="fill:#552048" />
-<path d="M 235,90 L 240,95 L 235,100 L 230,95 Z" style="fill:#552048" />
-<path d="M 125,100 L 130,105 L 125,110 L 120,105 Z" style="fill:#552048" />
-<path d="M 145,100 L 150,105 L 145,110 L 140,105 Z" style="fill:#552048" />
-<path d="M 165,100 L 170,105 L 165,110 L 160,105 Z" style="fill:#552048" />
-<path d="M 185,100 L 190,105 L 185,110 L 180,105 Z" style="fill:#552048" />
-<path d="M 205,100 L 210,105 L 205,110 L 200,105 Z" style="fill:#552048" />
-<path d="M 225,100 L 230,105 L 225,110 L 220,105 Z" style="fill:#552048" />
-<path d="M 245,100 L 250,105 L 245,110 L 240,105 Z" style="fill:#552048" />
-<path d="M 135,110 L 140,115 L 135,120 L 130,115 Z" style="fill:#552048" />
-<path d="M 155,110 L 160,115 L 155,120 L 150,115 Z" style="fill:#552048" />
-<path d="M 165,110 L 170,115 L 165,120 L 160,115 Z" style="fill:#552048" />
-<path d="M 185,110 L 190,115 L 185,120 L 180,115 Z" style="fill:#552048" />
-<path d="M 195,110 L 200,115 L 195,120 L 190,115 Z" style="fill:#552048" />
-<path d="M 75,120 L 80,125 L 75,130 L 70,125 Z" style="fill:#552048" />
-<path d="M 105,120 L 110,125 L 105,130 L 100,125 Z" style="fill:#552048" />
-<path d="M 135,120 L 140,125 L 135,130 L 130,125 Z" style="fill:#552048" />
-<path d="M 145,120 L 150,125 L 145,130 L 140,125 Z" style="fill:#552048" />
-<path d="M 165,120 L 170,125 L 165,130 L 160,125 Z" style="fill:#552048" />
-<path d="M 175,120 L 180,125 L 175,130 L 170,125 Z" style="fill:#552048" />
-<path d="M 185,120 L 190,125 L 185,130 L 180,125 Z" style="fill:#552048" />
-<path d="M 205,120 L 210,125 L 205,130 L 200,125 Z" style="fill:#552048" />
-<path d="M 215,120 L 220,125 L 215,130 L 210,125 Z" style="fill:#552048" />
-<path d="M 235,120 L 240,125 L 235,130 L 230,125 Z" style="fill:#552048" />
-<path d="M 275,120 L 280,125 L 275,130 L 270,125 Z" style="fill:#552048" />
-<path d="M 285,120 L 290,125 L 285,130 L 280,125 Z" style="fill:#552048" />
-<path d="M 295,120 L 300,125 L 295,130 L 290,125 Z" style="fill:#552048" />
-<path d="M 315,120 L 320,125 L 315,130 L 310,125 Z" style="fill:#552048" />
-<path d="M 325,120 L 330,125 L 325,130 L 320,125 Z" style="fill:#552048" />
-<path d="M 45,130 L 50,135 L 45,140 L 40,135 Z" style="fill:#552048" />
-<path d="M 95,130 L 100,135 L 95,140 L 90,135 Z" style="fill:#552048" />
-<path d="M 115,130 L 120,135 L 115,140 L 110,135 Z" style="fill:#552048" />
-<path d="M 125,130 L 130,135 L 125,140 L 120,135 Z" style="fill:#552048" />
-<path d="M 135,130 L 140,135 L 135,140 L 130,135 Z" style="fill:#552048" />
-<path d="M 145,130 L 150,135 L 145,140 L 140,135 Z" style="fill:#552048" />
-<path d="M 175,130 L 180,135 L 175,140 L 170,135 Z" style="fill:#552048" />
-<path d="M 185,130 L 190,135 L 185,140 L 180,135 Z" style="fill:#552048" />
-<path d="M 235,130 L 240,135 L 235,140 L 230,135 Z" style="fill:#552048" />
-<path d="M 245,130 L 250,135 L 245,140 L 240,135 Z" style="fill:#552048" />
-<path d="M 255,130 L 260,135 L 255,140 L 250,135 Z" style="fill:#552048" />
-<path d="M 285,130 L 290,135 L 285,140 L 280,135 Z" style="fill:#552048" />
-<path d="M 305,130 L 310,135 L 305,140 L 300,135 Z" style="fill:#552048" />
-<path d="M 325,130 L 330,135 L 325,140 L 320,135 Z" style="fill:#552048" />
-<path d="M 45,140 L 50,145 L 45,150 L 40,145 Z" style="fill:#552048" />
-<path d="M 55,140 L 60,145 L 55,150 L 50,145 Z" style="fill:#552048" />
-<path d="M 75,140 L 80,145 L 75,150 L 70,145 Z" style="fill:#552048" />
-<path d="M 85,140 L 90,145 L 85,150 L 80,145 Z" style="fill:#552048" />
-<path d="M 95,140 L 100,145 L 95,150 L 90,145 Z" style="fill:#552048" />
-<path d="M 105,140 L 110,145 L 105,150 L 100,145 Z" style="fill:#552048" />
-<path d="M 115,140 L 120,145 L 115,150 L 110,145 Z" style="fill:#552048" />
-<path d="M 155,140 L 160,145 L 155,150 L 150,145 Z" style="fill:#552048" />
-<path d="M 165,140 L 170,145 L 165,150 L 160,145 Z" style="fill:#552048" />
-<path d="M 185,140 L 190,145 L 185,150 L 180,145 Z" style="fill:#552048" />
-<path d="M 195,140 L 200,145 L 195,150 L 190,145 Z" style="fill:#552048" />
-<path d="M 205,140 L 210,145 L 205,150 L 200,145 Z" style="fill:#552048" />
-<path d="M 245,140 L 250,145 L 245,150 L 240,145 Z" style="fill:#552048" />
-<path d="M 265,140 L 270,145 L 265,150 L 260,145 Z" style="fill:#552048" />
-<path d="M 295,140 L 300,145 L 295,150 L 290,145 Z" style="fill:#552048" />
-<path d="M 315,140 L 320,145 L 315,150 L 310,145 Z" style="fill:#552048" />
-<path d="M 45,150 L 50,155 L 45,160 L 40,155 Z" style="fill:#552048" />
-<path d="M 65,150 L 70,155 L 65,160 L 60,155 Z" style="fill:#552048" />
-<path d="M 75,150 L 80,155 L 75,160 L 70,155 Z" style="fill:#552048" />
-<path d="M 95,150 L 100,155 L 95,160 L 90,155 Z" style="fill:#552048" />
-<path d="M 115,150 L 120,155 L 115,160 L 110,155 Z" style="fill:#552048" />
-<path d="M 135,150 L 140,155 L 135,160 L 130,155 Z" style="fill:#552048" />
-<path d="M 145,150 L 150,155 L 145,160 L 140,155 Z" style="fill:#552048" />
-<path d="M 195,150 L 200,155 L 195,160 L 190,155 Z" style="fill:#552048" />
-<path d="M 225,150 L 230,155 L 225,160 L 220,155 Z" style="fill:#552048" />
-<path d="M 255,150 L 260,155 L 255,160 L 250,155 Z" style="fill:#552048" />
-<path d="M 265,150 L 270,155 L 265,160 L 260,155 Z" style="fill:#552048" />
-<path d="M 275,150 L 280,155 L 275,160 L 270,155 Z" style="fill:#552048" />
-<path d="M 285,150 L 290,155 L 285,160 L 280,155 Z" style="fill:#552048" />
-<path d="M 305,150 L 310,155 L 305,160 L 300,155 Z" style="fill:#552048" />
-<path d="M 315,150 L 320,155 L 315,160 L 310,155 Z" style="fill:#552048" />
-<path d="M 55,160 L 60,165 L 55,170 L 50,165 Z" style="fill:#552048" />
-<path d="M 65,160 L 70,165 L 65,170 L 60,165 Z" style="fill:#552048" />
-<path d="M 105,160 L 110,165 L 105,170 L 100,165 Z" style="fill:#552048" />
-<path d="M 115,160 L 120,165 L 115,170 L 110,165 Z" style="fill:#552048" />
-<path d="M 125,160 L 130,165 L 125,170 L 120,165 Z" style="fill:#552048" />
-<path d="M 135,160 L 140,165 L 135,170 L 130,165 Z" style="fill:#552048" />
-<path d="M 155,160 L 160,165 L 155,170 L 150,165 Z" style="fill:#552048" />
-<path d="M 165,160 L 170,165 L 165,170 L 160,165 Z" style="fill:#552048" />
-<path d="M 195,160 L 200,165 L 195,170 L 190,165 Z" style="fill:#552048" />
-<path d="M 205,160 L 210,165 L 205,170 L 200,165 Z" style="fill:#552048" />
-<path d="M 225,160 L 230,165 L 225,170 L 220,165 Z" style="fill:#552048" />
-<path d="M 235,160 L 240,165 L 235,170 L 230,165 Z" style="fill:#552048" />
-<path d="M 245,160 L 250,165 L 245,170 L 240,165 Z" style="fill:#552048" />
-<path d="M 265,160 L 270,165 L 265,170 L 260,165 Z" style="fill:#552048" />
-<path d="M 275,160 L 280,165 L 275,170 L 270,165 Z" style="fill:#552048" />
-<path d="M 75,170 L 80,175 L 75,180 L 70,175 Z" style="fill:#552048" />
-<path d="M 85,170 L 90,175 L 85,180 L 80,175 Z" style="fill:#552048" />
-<path d="M 135,170 L 140,175 L 135,180 L 130,175 Z" style="fill:#552048" />
-<path d="M 145,170 L 150,175 L 145,180 L 140,175 Z" style="fill:#552048" />
-<path d="M 155,170 L 160,175 L 155,180 L 150,175 Z" style="fill:#552048" />
-<path d="M 165,170 L 170,175 L 165,180 L 160,175 Z" style="fill:#552048" />
-<path d="M 175,170 L 180,175 L 175,180 L 170,175 Z" style="fill:#552048" />
-<path d="M 195,170 L 200,175 L 195,180 L 190,175 Z" style="fill:#552048" />
-<path d="M 235,170 L 240,175 L 235,180 L 230,175 Z" style="fill:#552048" />
-<path d="M 245,170 L 250,175 L 245,180 L 240,175 Z" style="fill:#552048" />
-<path d="M 255,170 L 260,175 L 255,180 L 250,175 Z" style="fill:#552048" />
-<path d="M 275,170 L 280,175 L 275,180 L 270,175 Z" style="fill:#552048" />
-<path d="M 295,170 L 300,175 L 295,180 L 290,175 Z" style="fill:#552048" />
-<path d="M 315,170 L 320,175 L 315,180 L 310,175 Z" style="fill:#552048" />
-<path d="M 45,180 L 50,185 L 45,190 L 40,185 Z" style="fill:#552048" />
-<path d="M 95,180 L 100,185 L 95,190 L 90,185 Z" style="fill:#552048" />
-<path d="M 105,180 L 110,185 L 105,190 L 100,185 Z" style="fill:#552048" />
-<path d="M 115,180 L 120,185 L 115,190 L 110,185 Z" style="fill:#552048" />
-<path d="M 125,180 L 130,185 L 125,190 L 120,185 Z" style="fill:#552048" />
-<path d="M 135,180 L 140,185 L 135,190 L 130,185 Z" style="fill:#552048" />
-<path d="M 155,180 L 160,185 L 155,190 L 150,185 Z" style="fill:#552048" />
-<path d="M 165,180 L 170,185 L 165,190 L 160,185 Z" style="fill:#552048" />
-<path d="M 185,180 L 190,185 L 185,190 L 180,185 Z" style="fill:#552048" />
-<path d="M 195,180 L 200,185 L 195,190 L 190,185 Z" style="fill:#552048" />
-<path d="M 205,180 L 210,185 L 205,190 L 200,185 Z" style="fill:#552048" />
-<path d="M 225,180 L 230,185 L 225,190 L 220,185 Z" style="fill:#552048" />
-<path d="M 265,180 L 270,185 L 265,190 L 260,185 Z" style="fill:#552048" />
-<path d="M 325,180 L 330,185 L 325,190 L 320,185 Z" style="fill:#552048" />
-<path d="M 45,190 L 50,195 L 45,200 L 40,195 Z" style="fill:#552048" />
-<path d="M 75,190 L 80,195 L 75,200 L 70,195 Z" style="fill:#552048" />
-<path d="M 115,190 L 120,195 L 115,200 L 110,195 Z" style="fill:#552048" />
-<path d="M 135,190 L 140,195 L 135,200 L 130,195 Z" style="fill:#552048" />
-<path d="M 155,190 L 160,195 L 155,200 L 150,195 Z" style="fill:#552048" />
-<path d="M 175,190 L 180,195 L 175,200 L 170,195 Z" style="fill:#552048" />
-<path d="M 195,190 L 200,195 L 195,200 L 190,195 Z" style="fill:#552048" />
-<path d="M 205,190 L 210,195 L 205,200 L 200,195 Z" style="fill:#552048" />
-<path d="M 215,190 L 220,195 L 215,200 L 210,195 Z" style="fill:#552048" />
-<path d="M 225,190 L 230,195 L 225,200 L 220,195 Z" style="fill:#552048" />
-<path d="M 245,190 L 250,195 L 245,200 L 240,195 Z" style="fill:#552048" />
-<path d="M 275,190 L 280,195 L 275,200 L 270,195 Z" style="fill:#552048" />
-<path d="M 315,190 L 320,195 L 315,200 L 310,195 Z" style="fill:#552048" />
-<path d="M 325,190 L 330,195 L 325,200 L 320,195 Z" style="fill:#552048" />
-<path d="M 55,200 L 60,205 L 55,210 L 50,205 Z" style="fill:#552048" />
-<path d="M 75,200 L 80,205 L 75,210 L 70,205 Z" style="fill:#552048" />
-<path d="M 85,200 L 90,205 L 85,210 L 80,205 Z" style="fill:#552048" />
-<path d="M 95,200 L 100,205 L 95,210 L 90,205 Z" style="fill:#552048" />
-<path d="M 105,200 L 110,205 L 105,210 L 100,205 Z" style="fill:#552048" />
-<path d="M 115,200 L 120,205 L 115,210 L 110,205 Z" style="fill:#552048" />
-<path d="M 125,200 L 130,205 L 125,210 L 120,205 Z" style="fill:#552048" />
-<path d="M 165,200 L 170,205 L 165,210 L 160,205 Z" style="fill:#552048" />
-<path d="M 175,200 L 180,205 L 175,210 L 170,205 Z" style="fill:#552048" />
-<path d="M 185,200 L 190,205 L 185,210 L 180,205 Z" style="fill:#552048" />
-<path d="M 195,200 L 200,205 L 195,210 L 190,205 Z" style="fill:#552048" />
-<path d="M 215,200 L 220,205 L 215,210 L 210,205 Z" style="fill:#552048" />
-<path d="M 225,200 L 230,205 L 225,210 L 220,205 Z" style="fill:#552048" />
-<path d="M 285,200 L 290,205 L 285,210 L 280,205 Z" style="fill:#552048" />
-<path d="M 315,200 L 320,205 L 315,210 L 310,205 Z" style="fill:#552048" />
-<path d="M 325,200 L 330,205 L 325,210 L 320,205 Z" style="fill:#552048" />
-<path d="M 65,210 L 70,215 L 65,220 L 60,215 Z" style="fill:#552048" />
-<path d="M 75,210 L 80,215 L 75,220 L 70,215 Z" style="fill:#552048" />
-<path d="M 85,210 L 90,215 L 85,220 L 80,215 Z" style="fill:#552048" />
-<path d="M 95,210 L 100,215 L 95,220 L 90,215 Z" style="fill:#552048" />
-<path d="M 155,210 L 160,215 L 155,220 L 150,215 Z" style="fill:#552048" />
-<path d="M 175,210 L 180,215 L 175,220 L 170,215 Z" style="fill:#552048" />
-<path d="M 235,210 L 240,215 L 235,220 L 230,215 Z" style="fill:#552048" />
-<path d="M 245,210 L 250,215 L 245,220 L 240,215 Z" style="fill:#552048" />
-<path d="M 305,210 L 310,215 L 305,220 L 300,215 Z" style="fill:#552048" />
-<path d="M 315,210 L 320,215 L 315,220 L 310,215 Z" style="fill:#552048" />
-<path d="M 325,210 L 330,215 L 325,220 L 320,215 Z" style="fill:#552048" />
-<path d="M 45,220 L 50,225 L 45,230 L 40,225 Z" style="fill:#552048" />
-<path d="M 65,220 L 70,225 L 65,230 L 60,225 Z" style="fill:#552048" />
-<path d="M 95,220 L 100,225 L 95,230 L 90,225 Z" style="fill:#552048" />
-<path d="M 105,220 L 110,225 L 105,230 L 100,225 Z" style="fill:#552048" />
-<path d="M 115,220 L 120,225 L 115,230 L 110,225 Z" style="fill:#552048" />
-<path d="M 135,220 L 140,225 L 135,230 L 130,225 Z" style="fill:#552048" />
-<path d="M 145,220 L 150,225 L 145,230 L 140,225 Z" style="fill:#552048" />
-<path d="M 165,220 L 170,225 L 165,230 L 160,225 Z" style="fill:#552048" />
-<path d="M 175,220 L 180,225 L 175,230 L 170,225 Z" style="fill:#552048" />
-<path d="M 185,220 L 190,225 L 185,230 L 180,225 Z" style="fill:#552048" />
-<path d="M 205,220 L 210,225 L 205,230 L 200,225 Z" style="fill:#552048" />
-<path d="M 215,220 L 220,225 L 215,230 L 210,225 Z" style="fill:#552048" />
-<path d="M 225,220 L 230,225 L 225,230 L 220,225 Z" style="fill:#552048" />
-<path d="M 255,220 L 260,225 L 255,230 L 250,225 Z" style="fill:#552048" />
-<path d="M 305,220 L 310,225 L 305,230 L 300,225 Z" style="fill:#552048" />
-<path d="M 315,220 L 320,225 L 315,230 L 310,225 Z" style="fill:#552048" />
-<path d="M 325,220 L 330,225 L 325,230 L 320,225 Z" style="fill:#552048" />
-<path d="M 75,230 L 80,235 L 75,240 L 70,235 Z" style="fill:#552048" />
-<path d="M 85,230 L 90,235 L 85,240 L 80,235 Z" style="fill:#552048" />
-<path d="M 115,230 L 120,235 L 115,240 L 110,235 Z" style="fill:#552048" />
-<path d="M 125,230 L 130,235 L 125,240 L 120,235 Z" style="fill:#552048" />
-<path d="M 145,230 L 150,235 L 145,240 L 140,235 Z" style="fill:#552048" />
-<path d="M 165,230 L 170,235 L 165,240 L 160,235 Z" style="fill:#552048" />
-<path d="M 195,230 L 200,235 L 195,240 L 190,235 Z" style="fill:#552048" />
-<path d="M 205,230 L 210,235 L 205,240 L 200,235 Z" style="fill:#552048" />
-<path d="M 225,230 L 230,235 L 225,240 L 220,235 Z" style="fill:#552048" />
-<path d="M 295,230 L 300,235 L 295,240 L 290,235 Z" style="fill:#552048" />
-<path d="M 325,230 L 330,235 L 325,240 L 320,235 Z" style="fill:#552048" />
-<path d="M 45,240 L 50,245 L 45,250 L 40,245 Z" style="fill:#552048" />
-<path d="M 65,240 L 70,245 L 65,250 L 60,245 Z" style="fill:#552048" />
-<path d="M 85,240 L 90,245 L 85,250 L 80,245 Z" style="fill:#552048" />
-<path d="M 105,240 L 110,245 L 105,250 L 100,245 Z" style="fill:#552048" />
-<path d="M 125,240 L 130,245 L 125,250 L 120,245 Z" style="fill:#552048" />
-<path d="M 145,240 L 150,245 L 145,250 L 140,245 Z" style="fill:#552048" />
-<path d="M 155,240 L 160,245 L 155,250 L 150,245 Z" style="fill:#552048" />
-<path d="M 175,240 L 180,245 L 175,250 L 170,245 Z" style="fill:#552048" />
-<path d="M 215,240 L 220,245 L 215,250 L 210,245 Z" style="fill:#552048" />
-<path d="M 245,240 L 250,245 L 245,250 L 240,245 Z" style="fill:#552048" />
-<path d="M 255,240 L 260,245 L 255,250 L 250,245 Z" style="fill:#552048" />
-<path d="M 265,240 L 270,245 L 265,250 L 260,245 Z" style="fill:#552048" />
-<path d="M 275,240 L 280,245 L 275,250 L 270,245 Z" style="fill:#552048" />
-<path d="M 285,240 L 290,245 L 285,250 L 280,245 Z" style="fill:#552048" />
-<path d="M 305,240 L 310,245 L 305,250 L 300,245 Z" style="fill:#552048" />
-<path d="M 325,240 L 330,245 L 325,250 L 320,245 Z" style="fill:#552048" />
-<path d="M 125,250 L 130,255 L 125,260 L 120,255 Z" style="fill:#552048" />
-<path d="M 135,250 L 140,255 L 135,260 L 130,255 Z" style="fill:#552048" />
-<path d="M 145,250 L 150,255 L 145,260 L 140,255 Z" style="fill:#552048" />
-<path d="M 155,250 L 160,255 L 155,260 L 150,255 Z" style="fill:#552048" />
-<path d="M 165,250 L 170,255 L 165,260 L 160,255 Z" style="fill:#552048" />
-<path d="M 185,250 L 190,255 L 185,260 L 180,255 Z" style="fill:#552048" />
-<path d="M 205,250 L 210,255 L 205,260 L 200,255 Z" style="fill:#552048" />
-<path d="M 215,250 L 220,255 L 215,260 L 210,255 Z" style="fill:#552048" />
-<path d="M 225,250 L 230,255 L 225,260 L 220,255 Z" style="fill:#552048" />
-<path d="M 235,250 L 240,255 L 235,260 L 230,255 Z" style="fill:#552048" />
-<path d="M 245,250 L 250,255 L 245,260 L 240,255 Z" style="fill:#552048" />
-<path d="M 285,250 L 290,255 L 285,260 L 280,255 Z" style="fill:#552048" />
-<path d="M 315,250 L 320,255 L 315,260 L 310,255 Z" style="fill:#552048" />
-<path d="M 325,250 L 330,255 L 325,260 L 320,255 Z" style="fill:#552048" />
-<path d="M 135,260 L 140,265 L 135,270 L 130,265 Z" style="fill:#552048" />
-<path d="M 175,260 L 180,265 L 175,270 L 170,265 Z" style="fill:#552048" />
-<path d="M 185,260 L 190,265 L 185,270 L 180,265 Z" style="fill:#552048" />
-<path d="M 195,260 L 200,265 L 195,270 L 190,265 Z" style="fill:#552048" />
-<path d="M 205,260 L 210,265 L 205,270 L 200,265 Z" style="fill:#552048" />
-<path d="M 215,260 L 220,265 L 215,270 L 210,265 Z" style="fill:#552048" />
-<path d="M 245,260 L 250,265 L 245,270 L 240,265 Z" style="fill:#552048" />
-<path d="M 265,260 L 270,265 L 265,270 L 260,265 Z" style="fill:#552048" />
-<path d="M 285,260 L 290,265 L 285,270 L 280,265 Z" style="fill:#552048" />
-<path d="M 295,260 L 300,265 L 295,270 L 290,265 Z" style="fill:#552048" />
-<path d="M 305,260 L 310,265 L 305,270 L 300,265 Z" style="fill:#552048" />
-<path d="M 315,260 L 320,265 L 315,270 L 310,265 Z" style="fill:#552048" />
-<path d="M 155,270 L 160,275 L 155,280 L 150,275 Z" style="fill:#552048" />
-<path d="M 165,270 L 170,275 L 165,280 L 160,275 Z" style="fill:#552048" />
-<path d="M 175,270 L 180,275 L 175,280 L 170,275 Z" style="fill:#552048" />
-<path d="M 185,270 L 190,275 L 185,280 L 180,275 Z" style="fill:#552048" />
-<path d="M 195,270 L 200,275 L 195,280 L 190,275 Z" style="fill:#552048" />
-<path d="M 205,270 L 210,275 L 205,280 L 200,275 Z" style="fill:#552048" />
-<path d="M 215,270 L 220,275 L 215,280 L 210,275 Z" style="fill:#552048" />
-<path d="M 245,270 L 250,275 L 245,280 L 240,275 Z" style="fill:#552048" />
-<path d="M 285,270 L 290,275 L 285,280 L 280,275 Z" style="fill:#552048" />
-<path d="M 305,270 L 310,275 L 305,280 L 300,275 Z" style="fill:#552048" />
-<path d="M 325,270 L 330,275 L 325,280 L 320,275 Z" style="fill:#552048" />
-<path d="M 135,280 L 140,285 L 135,290 L 130,285 Z" style="fill:#552048" />
-<path d="M 155,280 L 160,285 L 155,290 L 150,285 Z" style="fill:#552048" />
-<path d="M 165,280 L 170,285 L 165,290 L 160,285 Z" style="fill:#552048" />
-<path d="M 175,280 L 180,285 L 175,290 L 170,285 Z" style="fill:#552048" />
-<path d="M 185,280 L 190,285 L 185,290 L 180,285 Z" style="fill:#552048" />
-<path d="M 195,280 L 200,285 L 195,290 L 190,285 Z" style="fill:#552048" />
-<path d="M 245,280 L 250,285 L 245,290 L 240,285 Z" style="fill:#552048" />
-<path d="M 255,280 L 260,285 L 255,290 L 250,285 Z" style="fill:#552048" />
-<path d="M 265,280 L 270,285 L 265,290 L 260,285 Z" style="fill:#552048" />
-<path d="M 275,280 L 280,285 L 275,290 L 270,285 Z" style="fill:#552048" />
-<path d="M 285,280 L 290,285 L 285,290 L 280,285 Z" style="fill:#552048" />
-<path d="M 295,280 L 300,285 L 295,290 L 290,285 Z" style="fill:#552048" />
-<path d="M 125,290 L 130,295 L 125,300 L 120,295 Z" style="fill:#552048" />
-<path d="M 175,290 L 180,295 L 175,300 L 170,295 Z" style="fill:#552048" />
-<path d="M 215,290 L 220,295 L 215,300 L 210,295 Z" style="fill:#552048" />
-<path d="M 225,290 L 230,295 L 225,300 L 220,295 Z" style="fill:#552048" />
-<path d="M 235,290 L 240,295 L 235,300 L 230,295 Z" style="fill:#552048" />
-<path d="M 245,290 L 250,295 L 245,300 L 240,295 Z" style="fill:#552048" />
-<path d="M 255,290 L 260,295 L 255,300 L 250,295 Z" style="fill:#552048" />
-<path d="M 265,290 L 270,295 L 265,300 L 260,295 Z" style="fill:#552048" />
-<path d="M 285,290 L 290,295 L 285,300 L 280,295 Z" style="fill:#552048" />
-<path d="M 295,290 L 300,295 L 295,300 L 290,295 Z" style="fill:#552048" />
-<path d="M 325,290 L 330,295 L 325,300 L 320,295 Z" style="fill:#552048" />
-<path d="M 135,300 L 140,305 L 135,310 L 130,305 Z" style="fill:#552048" />
-<path d="M 145,300 L 150,305 L 145,310 L 140,305 Z" style="fill:#552048" />
-<path d="M 155,300 L 160,305 L 155,310 L 150,305 Z" style="fill:#552048" />
-<path d="M 175,300 L 180,305 L 175,310 L 170,305 Z" style="fill:#552048" />
-<path d="M 185,300 L 190,305 L 185,310 L 180,305 Z" style="fill:#552048" />
-<path d="M 235,300 L 240,305 L 235,310 L 230,305 Z" style="fill:#552048" />
-<path d="M 245,300 L 250,305 L 245,310 L 240,305 Z" style="fill:#552048" />
-<path d="M 285,300 L 290,305 L 285,310 L 280,305 Z" style="fill:#552048" />
-<path d="M 295,300 L 300,305 L 295,310 L 290,305 Z" style="fill:#552048" />
-<path d="M 325,300 L 330,305 L 325,310 L 320,305 Z" style="fill:#552048" />
-<path d="M 175,310 L 180,315 L 175,320 L 170,315 Z" style="fill:#552048" />
-<path d="M 185,310 L 190,315 L 185,320 L 180,315 Z" style="fill:#552048" />
-<path d="M 195,310 L 200,315 L 195,320 L 190,315 Z" style="fill:#552048" />
-<path d="M 205,310 L 210,315 L 205,320 L 200,315 Z" style="fill:#552048" />
-<path d="M 215,310 L 220,315 L 215,320 L 210,315 Z" style="fill:#552048" />
-<path d="M 225,310 L 230,315 L 225,320 L 220,315 Z" style="fill:#552048" />
-<path d="M 235,310 L 240,315 L 235,320 L 230,315 Z" style="fill:#552048" />
-<path d="M 265,310 L 270,315 L 265,320 L 260,315 Z" style="fill:#552048" />
-<path d="M 275,310 L 280,315 L 275,320 L 270,315 Z" style="fill:#552048" />
-<path d="M 315,310 L 320,315 L 315,320 L 310,315 Z" style="fill:#552048" />
-<path d="M 145,320 L 150,325 L 145,330 L 140,325 Z" style="fill:#552048" />
-<path d="M 165,320 L 170,325 L 165,330 L 160,325 Z" style="fill:#552048" />
-<path d="M 195,320 L 200,325 L 195,330 L 190,325 Z" style="fill:#552048" />
-<path d="M 215,320 L 220,325 L 215,330 L 210,325 Z" style="fill:#552048" />
-<path d="M 225,320 L 230,325 L 225,330 L 220,325 Z" style="fill:#552048" />
-<path d="M 265,320 L 270,325 L 265,330 L 260,325 Z" style="fill:#552048" />
-<path d="M 285,320 L 290,325 L 285,330 L 280,325 Z" style="fill:#552048" />
-<path d="M 315,320 L 320,325 L 315,330 L 310,325 Z" style="fill:#552048" />
+<circle cx="125" cy="45" r="6" style="fill:#552048" />
+<circle cx="145" cy="45" r="6" style="fill:#552048" />
+<circle cx="155" cy="45" r="6" style="fill:#552048" />
+<circle cx="165" cy="45" r="6" style="fill:#552048" />
+<circle cx="175" cy="45" r="6" style="fill:#552048" />
+<circle cx="185" cy="45" r="6" style="fill:#552048" />
+<circle cx="205" cy="45" r="6" style="fill:#552048" />
+<circle cx="245" cy="45" r="6" style="fill:#552048" />
+<circle cx="125" cy="55" r="6" style="fill:#552048" />
+<circle cx="135" cy="55" r="6" style="fill:#552048" />
+<circle cx="155" cy="55" r="6" style="fill:#552048" />
+<circle cx="165" cy="55" r="6" style="fill:#552048" />
+<circle cx="185" cy="55" r="6" style="fill:#552048" />
+<circle cx="245" cy="55" r="6" style="fill:#552048" />
+<circle cx="155" cy="65" r="6" style="fill:#552048" />
+<circle cx="175" cy="65" r="6" style="fill:#552048" />
+<circle cx="185" cy="65" r="6" style="fill:#552048" />
+<circle cx="205" cy="65" r="6" style="fill:#552048" />
+<circle cx="215" cy="65" r="6" style="fill:#552048" />
+<circle cx="125" cy="75" r="6" style="fill:#552048" />
+<circle cx="135" cy="75" r="6" style="fill:#552048" />
+<circle cx="165" cy="75" r="6" style="fill:#552048" />
+<circle cx="175" cy="75" r="6" style="fill:#552048" />
+<circle cx="185" cy="75" r="6" style="fill:#552048" />
+<circle cx="225" cy="75" r="6" style="fill:#552048" />
+<circle cx="235" cy="75" r="6" style="fill:#552048" />
+<circle cx="125" cy="85" r="6" style="fill:#552048" />
+<circle cx="145" cy="85" r="6" style="fill:#552048" />
+<circle cx="155" cy="85" r="6" style="fill:#552048" />
+<circle cx="215" cy="85" r="6" style="fill:#552048" />
+<circle cx="225" cy="85" r="6" style="fill:#552048" />
+<circle cx="125" cy="95" r="6" style="fill:#552048" />
+<circle cx="145" cy="95" r="6" style="fill:#552048" />
+<circle cx="185" cy="95" r="6" style="fill:#552048" />
+<circle cx="215" cy="95" r="6" style="fill:#552048" />
+<circle cx="225" cy="95" r="6" style="fill:#552048" />
+<circle cx="235" cy="95" r="6" style="fill:#552048" />
+<circle cx="125" cy="105" r="6" style="fill:#552048" />
+<circle cx="145" cy="105" r="6" style="fill:#552048" />
+<circle cx="165" cy="105" r="6" style="fill:#552048" />
+<circle cx="185" cy="105" r="6" style="fill:#552048" />
+<circle cx="205" cy="105" r="6" style="fill:#552048" />
+<circle cx="225" cy="105" r="6" style="fill:#552048" />
+<circle cx="245" cy="105" r="6" style="fill:#552048" />
+<circle cx="135" cy="115" r="6" style="fill:#552048" />
+<circle cx="155" cy="115" r="6" style="fill:#552048" />
+<circle cx="165" cy="115" r="6" style="fill:#552048" />
+<circle cx="185" cy="115" r="6" style="fill:#552048" />
+<circle cx="195" cy="115" r="6" style="fill:#552048" />
+<circle cx="75" cy="125" r="6" style="fill:#552048" />
+<circle cx="105" cy="125" r="6" style="fill:#552048" />
+<circle cx="135" cy="125" r="6" style="fill:#552048" />
+<circle cx="145" cy="125" r="6" style="fill:#552048" />
+<circle cx="165" cy="125" r="6" style="fill:#552048" />
+<circle cx="175" cy="125" r="6" style="fill:#552048" />
+<circle cx="185" cy="125" r="6" style="fill:#552048" />
+<circle cx="205" cy="125" r="6" style="fill:#552048" />
+<circle cx="215" cy="125" r="6" style="fill:#552048" />
+<circle cx="235" cy="125" r="6" style="fill:#552048" />
+<circle cx="275" cy="125" r="6" style="fill:#552048" />
+<circle cx="285" cy="125" r="6" style="fill:#552048" />
+<circle cx="295" cy="125" r="6" style="fill:#552048" />
+<circle cx="315" cy="125" r="6" style="fill:#552048" />
+<circle cx="325" cy="125" r="6" style="fill:#552048" />
+<circle cx="45" cy="135" r="6" style="fill:#552048" />
+<circle cx="95" cy="135" r="6" style="fill:#552048" />
+<circle cx="115" cy="135" r="6" style="fill:#552048" />
+<circle cx="125" cy="135" r="6" style="fill:#552048" />
+<circle cx="135" cy="135" r="6" style="fill:#552048" />
+<circle cx="145" cy="135" r="6" style="fill:#552048" />
+<circle cx="175" cy="135" r="6" style="fill:#552048" />
+<circle cx="185" cy="135" r="6" style="fill:#552048" />
+<circle cx="235" cy="135" r="6" style="fill:#552048" />
+<circle cx="245" cy="135" r="6" style="fill:#552048" />
+<circle cx="255" cy="135" r="6" style="fill:#552048" />
+<circle cx="285" cy="135" r="6" style="fill:#552048" />
+<circle cx="305" cy="135" r="6" style="fill:#552048" />
+<circle cx="325" cy="135" r="6" style="fill:#552048" />
+<circle cx="45" cy="145" r="6" style="fill:#552048" />
+<circle cx="55" cy="145" r="6" style="fill:#552048" />
+<circle cx="75" cy="145" r="6" style="fill:#552048" />
+<circle cx="85" cy="145" r="6" style="fill:#552048" />
+<circle cx="95" cy="145" r="6" style="fill:#552048" />
+<circle cx="105" cy="145" r="6" style="fill:#552048" />
+<circle cx="115" cy="145" r="6" style="fill:#552048" />
+<circle cx="155" cy="145" r="6" style="fill:#552048" />
+<circle cx="165" cy="145" r="6" style="fill:#552048" />
+<circle cx="185" cy="145" r="6" style="fill:#552048" />
+<circle cx="195" cy="145" r="6" style="fill:#552048" />
+<circle cx="205" cy="145" r="6" style="fill:#552048" />
+<circle cx="245" cy="145" r="6" style="fill:#552048" />
+<circle cx="265" cy="145" r="6" style="fill:#552048" />
+<circle cx="295" cy="145" r="6" style="fill:#552048" />
+<circle cx="315" cy="145" r="6" style="fill:#552048" />
+<circle cx="45" cy="155" r="6" style="fill:#552048" />
+<circle cx="65" cy="155" r="6" style="fill:#552048" />
+<circle cx="75" cy="155" r="6" style="fill:#552048" />
+<circle cx="95" cy="155" r="6" style="fill:#552048" />
+<circle cx="115" cy="155" r="6" style="fill:#552048" />
+<circle cx="135" cy="155" r="6" style="fill:#552048" />
+<circle cx="145" cy="155" r="6" style="fill:#552048" />
+<circle cx="195" cy="155" r="6" style="fill:#552048" />
+<circle cx="225" cy="155" r="6" style="fill:#552048" />
+<circle cx="255" cy="155" r="6" style="fill:#552048" />
+<circle cx="265" cy="155" r="6" style="fill:#552048" />
+<circle cx="275" cy="155" r="6" style="fill:#552048" />
+<circle cx="285" cy="155" r="6" style="fill:#552048" />
+<circle cx="305" cy="155" r="6" style="fill:#552048" />
+<circle cx="315" cy="155" r="6" style="fill:#552048" />
+<circle cx="55" cy="165" r="6" style="fill:#552048" />
+<circle cx="65" cy="165" r="6" style="fill:#552048" />
+<circle cx="105" cy="165" r="6" style="fill:#552048" />
+<circle cx="115" cy="165" r="6" style="fill:#552048" />
+<circle cx="125" cy="165" r="6" style="fill:#552048" />
+<circle cx="135" cy="165" r="6" style="fill:#552048" />
+<circle cx="155" cy="165" r="6" style="fill:#552048" />
+<circle cx="165" cy="165" r="6" style="fill:#552048" />
+<circle cx="195" cy="165" r="6" style="fill:#552048" />
+<circle cx="205" cy="165" r="6" style="fill:#552048" />
+<circle cx="225" cy="165" r="6" style="fill:#552048" />
+<circle cx="235" cy="165" r="6" style="fill:#552048" />
+<circle cx="245" cy="165" r="6" style="fill:#552048" />
+<circle cx="265" cy="165" r="6" style="fill:#552048" />
+<circle cx="275" cy="165" r="6" style="fill:#552048" />
+<circle cx="75" cy="175" r="6" style="fill:#552048" />
+<circle cx="85" cy="175" r="6" style="fill:#552048" />
+<circle cx="135" cy="175" r="6" style="fill:#552048" />
+<circle cx="145" cy="175" r="6" style="fill:#552048" />
+<circle cx="155" cy="175" r="6" style="fill:#552048" />
+<circle cx="165" cy="175" r="6" style="fill:#552048" />
+<circle cx="175" cy="175" r="6" style="fill:#552048" />
+<circle cx="195" cy="175" r="6" style="fill:#552048" />
+<circle cx="235" cy="175" r="6" style="fill:#552048" />
+<circle cx="245" cy="175" r="6" style="fill:#552048" />
+<circle cx="255" cy="175" r="6" style="fill:#552048" />
+<circle cx="275" cy="175" r="6" style="fill:#552048" />
+<circle cx="295" cy="175" r="6" style="fill:#552048" />
+<circle cx="315" cy="175" r="6" style="fill:#552048" />
+<circle cx="45" cy="185" r="6" style="fill:#552048" />
+<circle cx="95" cy="185" r="6" style="fill:#552048" />
+<circle cx="105" cy="185" r="6" style="fill:#552048" />
+<circle cx="115" cy="185" r="6" style="fill:#552048" />
+<circle cx="125" cy="185" r="6" style="fill:#552048" />
+<circle cx="135" cy="185" r="6" style="fill:#552048" />
+<circle cx="155" cy="185" r="6" style="fill:#552048" />
+<circle cx="165" cy="185" r="6" style="fill:#552048" />
+<circle cx="185" cy="185" r="6" style="fill:#552048" />
+<circle cx="195" cy="185" r="6" style="fill:#552048" />
+<circle cx="205" cy="185" r="6" style="fill:#552048" />
+<circle cx="225" cy="185" r="6" style="fill:#552048" />
+<circle cx="265" cy="185" r="6" style="fill:#552048" />
+<circle cx="325" cy="185" r="6" style="fill:#552048" />
+<circle cx="45" cy="195" r="6" style="fill:#552048" />
+<circle cx="75" cy="195" r="6" style="fill:#552048" />
+<circle cx="115" cy="195" r="6" style="fill:#552048" />
+<circle cx="135" cy="195" r="6" style="fill:#552048" />
+<circle cx="155" cy="195" r="6" style="fill:#552048" />
+<circle cx="175" cy="195" r="6" style="fill:#552048" />
+<circle cx="195" cy="195" r="6" style="fill:#552048" />
+<circle cx="205" cy="195" r="6" style="fill:#552048" />
+<circle cx="215" cy="195" r="6" style="fill:#552048" />
+<circle cx="225" cy="195" r="6" style="fill:#552048" />
+<circle cx="245" cy="195" r="6" style="fill:#552048" />
+<circle cx="275" cy="195" r="6" style="fill:#552048" />
+<circle cx="315" cy="195" r="6" style="fill:#552048" />
+<circle cx="325" cy="195" r="6" style="fill:#552048" />
+<circle cx="55" cy="205" r="6" style="fill:#552048" />
+<circle cx="75" cy="205" r="6" style="fill:#552048" />
+<circle cx="85" cy="205" r="6" style="fill:#552048" />
+<circle cx="95" cy="205" r="6" style="fill:#552048" />
+<circle cx="105" cy="205" r="6" style="fill:#552048" />
+<circle cx="115" cy="205" r="6" style="fill:#552048" />
+<circle cx="125" cy="205" r="6" style="fill:#552048" />
+<circle cx="165" cy="205" r="6" style="fill:#552048" />
+<circle cx="175" cy="205" r="6" style="fill:#552048" />
+<circle cx="185" cy="205" r="6" style="fill:#552048" />
+<circle cx="195" cy="205" r="6" style="fill:#552048" />
+<circle cx="215" cy="205" r="6" style="fill:#552048" />
+<circle cx="225" cy="205" r="6" style="fill:#552048" />
+<circle cx="285" cy="205" r="6" style="fill:#552048" />
+<circle cx="315" cy="205" r="6" style="fill:#552048" />
+<circle cx="325" cy="205" r="6" style="fill:#552048" />
+<circle cx="65" cy="215" r="6" style="fill:#552048" />
+<circle cx="75" cy="215" r="6" style="fill:#552048" />
+<circle cx="85" cy="215" r="6" style="fill:#552048" />
+<circle cx="95" cy="215" r="6" style="fill:#552048" />
+<circle cx="155" cy="215" r="6" style="fill:#552048" />
+<circle cx="175" cy="215" r="6" style="fill:#552048" />
+<circle cx="235" cy="215" r="6" style="fill:#552048" />
+<circle cx="245" cy="215" r="6" style="fill:#552048" />
+<circle cx="305" cy="215" r="6" style="fill:#552048" />
+<circle cx="315" cy="215" r="6" style="fill:#552048" />
+<circle cx="325" cy="215" r="6" style="fill:#552048" />
+<circle cx="45" cy="225" r="6" style="fill:#552048" />
+<circle cx="65" cy="225" r="6" style="fill:#552048" />
+<circle cx="95" cy="225" r="6" style="fill:#552048" />
+<circle cx="105" cy="225" r="6" style="fill:#552048" />
+<circle cx="115" cy="225" r="6" style="fill:#552048" />
+<circle cx="135" cy="225" r="6" style="fill:#552048" />
+<circle cx="145" cy="225" r="6" style="fill:#552048" />
+<circle cx="165" cy="225" r="6" style="fill:#552048" />
+<circle cx="175" cy="225" r="6" style="fill:#552048" />
+<circle cx="185" cy="225" r="6" style="fill:#552048" />
+<circle cx="205" cy="225" r="6" style="fill:#552048" />
+<circle cx="215" cy="225" r="6" style="fill:#552048" />
+<circle cx="225" cy="225" r="6" style="fill:#552048" />
+<circle cx="255" cy="225" r="6" style="fill:#552048" />
+<circle cx="305" cy="225" r="6" style="fill:#552048" />
+<circle cx="315" cy="225" r="6" style="fill:#552048" />
+<circle cx="325" cy="225" r="6" style="fill:#552048" />
+<circle cx="75" cy="235" r="6" style="fill:#552048" />
+<circle cx="85" cy="235" r="6" style="fill:#552048" />
+<circle cx="115" cy="235" r="6" style="fill:#552048" />
+<circle cx="125" cy="235" r="6" style="fill:#552048" />
+<circle cx="145" cy="235" r="6" style="fill:#552048" />
+<circle cx="165" cy="235" r="6" style="fill:#552048" />
+<circle cx="195" cy="235" r="6" style="fill:#552048" />
+<circle cx="205" cy="235" r="6" style="fill:#552048" />
+<circle cx="225" cy="235" r="6" style="fill:#552048" />
+<circle cx="295" cy="235" r="6" style="fill:#552048" />
+<circle cx="325" cy="235" r="6" style="fill:#552048" />
+<circle cx="45" cy="245" r="6" style="fill:#552048" />
+<circle cx="65" cy="245" r="6" style="fill:#552048" />
+<circle cx="85" cy="245" r="6" style="fill:#552048" />
+<circle cx="105" cy="245" r="6" style="fill:#552048" />
+<circle cx="125" cy="245" r="6" style="fill:#552048" />
+<circle cx="145" cy="245" r="6" style="fill:#552048" />
+<circle cx="155" cy="245" r="6" style="fill:#552048" />
+<circle cx="175" cy="245" r="6" style="fill:#552048" />
+<circle cx="215" cy="245" r="6" style="fill:#552048" />
+<circle cx="245" cy="245" r="6" style="fill:#552048" />
+<circle cx="255" cy="245" r="6" style="fill:#552048" />
+<circle cx="265" cy="245" r="6" style="fill:#552048" />
+<circle cx="275" cy="245" r="6" style="fill:#552048" />
+<circle cx="285" cy="245" r="6" style="fill:#552048" />
+<circle cx="305" cy="245" r="6" style="fill:#552048" />
+<circle cx="325" cy="245" r="6" style="fill:#552048" />
+<circle cx="125" cy="255" r="6" style="fill:#552048" />
+<circle cx="135" cy="255" r="6" style="fill:#552048" />
+<circle cx="145" cy="255" r="6" style="fill:#552048" />
+<circle cx="155" cy="255" r="6" style="fill:#552048" />
+<circle cx="165" cy="255" r="6" style="fill:#552048" />
+<circle cx="185" cy="255" r="6" style="fill:#552048" />
+<circle cx="205" cy="255" r="6" style="fill:#552048" />
+<circle cx="215" cy="255" r="6" style="fill:#552048" />
+<circle cx="225" cy="255" r="6" style="fill:#552048" />
+<circle cx="235" cy="255" r="6" style="fill:#552048" />
+<circle cx="245" cy="255" r="6" style="fill:#552048" />
+<circle cx="285" cy="255" r="6" style="fill:#552048" />
+<circle cx="315" cy="255" r="6" style="fill:#552048" />
+<circle cx="325" cy="255" r="6" style="fill:#552048" />
+<circle cx="135" cy="265" r="6" style="fill:#552048" />
+<circle cx="175" cy="265" r="6" style="fill:#552048" />
+<circle cx="185" cy="265" r="6" style="fill:#552048" />
+<circle cx="195" cy="265" r="6" style="fill:#552048" />
+<circle cx="205" cy="265" r="6" style="fill:#552048" />
+<circle cx="215" cy="265" r="6" style="fill:#552048" />
+<circle cx="245" cy="265" r="6" style="fill:#552048" />
+<circle cx="265" cy="265" r="6" style="fill:#552048" />
+<circle cx="285" cy="265" r="6" style="fill:#552048" />
+<circle cx="295" cy="265" r="6" style="fill:#552048" />
+<circle cx="305" cy="265" r="6" style="fill:#552048" />
+<circle cx="315" cy="265" r="6" style="fill:#552048" />
+<circle cx="155" cy="275" r="6" style="fill:#552048" />
+<circle cx="165" cy="275" r="6" style="fill:#552048" />
+<circle cx="175" cy="275" r="6" style="fill:#552048" />
+<circle cx="185" cy="275" r="6" style="fill:#552048" />
+<circle cx="195" cy="275" r="6" style="fill:#552048" />
+<circle cx="205" cy="275" r="6" style="fill:#552048" />
+<circle cx="215" cy="275" r="6" style="fill:#552048" />
+<circle cx="245" cy="275" r="6" style="fill:#552048" />
+<circle cx="285" cy="275" r="6" style="fill:#552048" />
+<circle cx="305" cy="275" r="6" style="fill:#552048" />
+<circle cx="325" cy="275" r="6" style="fill:#552048" />
+<circle cx="135" cy="285" r="6" style="fill:#552048" />
+<circle cx="155" cy="285" r="6" style="fill:#552048" />
+<circle cx="165" cy="285" r="6" style="fill:#552048" />
+<circle cx="175" cy="285" r="6" style="fill:#552048" />
+<circle cx="185" cy="285" r="6" style="fill:#552048" />
+<circle cx="195" cy="285" r="6" style="fill:#552048" />
+<circle cx="245" cy="285" r="6" style="fill:#552048" />
+<circle cx="255" cy="285" r="6" style="fill:#552048" />
+<circle cx="265" cy="285" r="6" style="fill:#552048" />
+<circle cx="275" cy="285" r="6" style="fill:#552048" />
+<circle cx="285" cy="285" r="6" style="fill:#552048" />
+<circle cx="295" cy="285" r="6" style="fill:#552048" />
+<circle cx="125" cy="295" r="6" style="fill:#552048" />
+<circle cx="175" cy="295" r="6" style="fill:#552048" />
+<circle cx="215" cy="295" r="6" style="fill:#552048" />
+<circle cx="225" cy="295" r="6" style="fill:#552048" />
+<circle cx="235" cy="295" r="6" style="fill:#552048" />
+<circle cx="245" cy="295" r="6" style="fill:#552048" />
+<circle cx="255" cy="295" r="6" style="fill:#552048" />
+<circle cx="265" cy="295" r="6" style="fill:#552048" />
+<circle cx="285" cy="295" r="6" style="fill:#552048" />
+<circle cx="295" cy="295" r="6" style="fill:#552048" />
+<circle cx="325" cy="295" r="6" style="fill:#552048" />
+<circle cx="135" cy="305" r="6" style="fill:#552048" />
+<circle cx="145" cy="305" r="6" style="fill:#552048" />
+<circle cx="155" cy="305" r="6" style="fill:#552048" />
+<circle cx="175" cy="305" r="6" style="fill:#552048" />
+<circle cx="185" cy="305" r="6" style="fill:#552048" />
+<circle cx="235" cy="305" r="6" style="fill:#552048" />
+<circle cx="245" cy="305" r="6" style="fill:#552048" />
+<circle cx="285" cy="305" r="6" style="fill:#552048" />
+<circle cx="295" cy="305" r="6" style="fill:#552048" />
+<circle cx="325" cy="305" r="6" style="fill:#552048" />
+<circle cx="175" cy="315" r="6" style="fill:#552048" />
+<circle cx="185" cy="315" r="6" style="fill:#552048" />
+<circle cx="195" cy="315" r="6" style="fill:#552048" />
+<circle cx="205" cy="315" r="6" style="fill:#552048" />
+<circle cx="215" cy="315" r="6" style="fill:#552048" />
+<circle cx="225" cy="315" r="6" style="fill:#552048" />
+<circle cx="235" cy="315" r="6" style="fill:#552048" />
+<circle cx="265" cy="315" r="6" style="fill:#552048" />
+<circle cx="275" cy="315" r="6" style="fill:#552048" />
+<circle cx="315" cy="315" r="6" style="fill:#552048" />
+<circle cx="145" cy="325" r="6" style="fill:#552048" />
+<circle cx="165" cy="325" r="6" style="fill:#552048" />
+<circle cx="195" cy="325" r="6" style="fill:#552048" />
+<circle cx="215" cy="325" r="6" style="fill:#552048" />
+<circle cx="225" cy="325" r="6" style="fill:#552048" />
+<circle cx="265" cy="325" r="6" style="fill:#552048" />
+<circle cx="285" cy="325" r="6" style="fill:#552048" />
+<circle cx="315" cy="325" r="6" style="fill:#552048" />
 <rect x="40" y="40" width="70" height="70" rx="5" ry="5" style="fill:#552048" />
 <rect x="50" y="50" width="50" height="50" rx="5" ry="5" style="fill:#f8f2ec" />
-<rect x="60" y="60" width="30" height="30" style="fill:#552048" />
+<path d="M 75,60 L 90,75 L 75,90 L 60,75 Z" style="fill:#552048" />
 <rect x="260" y="40" width="70" height="70" rx="5" ry="5" style="fill:#552048" />
 <rect x="270" y="50" width="50" height="50" rx="5" ry="5" style="fill:#f8f2ec" />
-<rect x="280" y="60" width="30" height="30" style="fill:#552048" />
+<path d="M 295,60 L 310,75 L 295,90 L 280,75 Z" style="fill:#552048" />
 <rect x="40" y="260" width="70" height="70" rx="5" ry="5" style="fill:#552048" />
 <rect x="50" y="270" width="50" height="50" rx="5" ry="5" style="fill:#f8f2ec" />
-<rect x="60" y="280" width="30" height="30" style="fill:#552048" />
+<path d="M 75,280 L 90,295 L 75,310 L 60,295 Z" style="fill:#552048" />
 </svg>
