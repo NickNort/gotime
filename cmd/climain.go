@@ -10,12 +10,12 @@ import (
 
 func main() {
 	// Parse command line flags
-	cornerCenter := flag.String("finder-center", "square", "Corner center style: 'circle', 'square', or 'diamond'")
+	finderCenter := flag.String("finder-center", "square", "Finder center style: 'circle', 'square', or 'diamond'")
 	finderFrame := flag.String("finder-frame", "square", "Finder frame style: 'square', 'rounded', 'circle', or 'diamond'")
 	moduleShape := flag.String("module-shape", "rounded", "Module shape: 'square', 'rounded', 'circle', or 'diamond'")
 
 	// Shorthand flags (aliases)
-	flag.StringVar(cornerCenter, "c", "square", "Shorthand for -finder-center")
+	flag.StringVar(finderCenter, "c", "square", "Shorthand for -finder-center")
 	flag.StringVar(finderFrame, "f", "square", "Shorthand for -finder-frame")
 	flag.StringVar(moduleShape, "m", "rounded", "Shorthand for -module-shape")
 
@@ -48,7 +48,7 @@ func main() {
 					fmt.Fprintf(os.Stderr, "Error: finder-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
 					os.Exit(1)
 				}
-				*cornerCenter = value
+				*finderCenter = value
 				continue
 			} else if len(arg) >= 3 && arg[:3] == "-c=" {
 				value := arg[3:]
@@ -56,7 +56,7 @@ func main() {
 					fmt.Fprintf(os.Stderr, "Error: finder-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
 					os.Exit(1)
 				}
-				*cornerCenter = value
+				*finderCenter = value
 				continue
 			} else if len(arg) >= 14 && arg[:14] == "-finder-frame=" {
 				value := arg[14:]
@@ -103,7 +103,7 @@ func main() {
 					fmt.Fprintf(os.Stderr, "Error: finder-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
 					os.Exit(1)
 				}
-				*cornerCenter = value
+				*finderCenter = value
 				skipNext = true
 				continue
 			} else if arg == "-finder-frame" || arg == "-f" {
@@ -148,7 +148,7 @@ func main() {
 
 	// Build options from flags
 	opts := qr.Options{
-		FinderCenter: *cornerCenter,
+		FinderCenter: *finderCenter,
 		FinderFrame:  *finderFrame,
 		ModuleShape:  *moduleShape,
 	}

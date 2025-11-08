@@ -30,10 +30,10 @@ type CornerBounds struct {
 
 // Options contains configuration for QR code generation
 type Options struct {
-	FinderCenter   string // "circle" | "square" | "diamond"
-	FinderFrame    string // "square" | "rounded" | "circle" | "diamond"
-	ModuleShape    string // "square" | "rounded" | "circle" | "diamond"
-	ModuleSize     int    // pixels per module; 0 => default 10
+	FinderCenter    string // "circle" | "square" | "diamond"
+	FinderFrame     string // "square" | "rounded" | "circle" | "diamond"
+	ModuleShape     string // "square" | "rounded" | "circle" | "diamond"
+	ModuleSize      int    // pixels per module; 0 => default 10
 	BackgroundColor string // hex color code (e.g., "#f8f2ec"); empty => default
 	ForegroundColor string // hex color code (e.g., "#552048"); empty => default
 }
@@ -178,7 +178,7 @@ func isInCorner(x, y int, corners CornerBounds) bool {
 	return false
 }
 
-func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBounds, cornerCenterStyle string, finderFrameStyle string, moduleShape string, bgColor string, fgColor string) {
+func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBounds, finderCenterStyle string, finderFrameStyle string, moduleShape string, bgColor string, fgColor string) {
 	size := len(bitmap) * moduleSize
 
 	// Start SVG
@@ -313,7 +313,7 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 		// Render inner center as either a circle, square, or diamond (positions 2-4, 3x3 block)
 		centerX := cornerX + 2*moduleSize
 		centerY := cornerY + 2*moduleSize
-		switch cornerCenterStyle {
+		switch finderCenterStyle {
 		case "circle":
 			// Center of the 3x3 block
 			centerCX := centerX + (3*moduleSize)/2
