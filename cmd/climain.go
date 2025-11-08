@@ -13,6 +13,7 @@ func main() {
 	finderCenter := flag.String("finder-center", "square", "Finder center style: 'circle', 'square', or 'diamond'")
 	finderFrame := flag.String("finder-frame", "square", "Finder frame style: 'square', 'rounded', 'circle', or 'diamond'")
 	moduleShape := flag.String("module-shape", "rounded", "Module shape: 'square', 'rounded', 'circle', or 'diamond'")
+	moduleConnect := flag.String("connect", "horizontal", "Module connection: 'horizontal', 'vertical', or 'both'")
 
 	// Shorthand flags (aliases)
 	flag.StringVar(finderCenter, "c", "square", "Shorthand for -finder-center")
@@ -90,6 +91,14 @@ func main() {
 				}
 				*moduleShape = value
 				continue
+			} else if len(arg) >= 9 && arg[:9] == "-connect=" {
+				value := arg[9:]
+				if value == "" {
+					fmt.Fprintf(os.Stderr, "Error: connect cannot be empty. Must be 'horizontal', 'vertical', or 'both'\n")
+					os.Exit(1)
+				}
+				*moduleConnect = value
+				continue
 			}
 
 			// Handle -flag value format
@@ -132,6 +141,19 @@ func main() {
 				*moduleShape = value
 				skipNext = true
 				continue
+			} else if arg == "-connect" {
+				if i+1 >= len(parsedArgs) {
+					fmt.Fprintf(os.Stderr, "Error: connect requires a value. Must be 'horizontal', 'vertical', or 'both'\n")
+					os.Exit(1)
+				}
+				value := parsedArgs[i+1]
+				if value == "" || (len(value) > 0 && value[0] == '-') {
+					fmt.Fprintf(os.Stderr, "Error: connect cannot be empty. Must be 'horizontal', 'vertical', or 'both'\n")
+					os.Exit(1)
+				}
+				*moduleConnect = value
+				skipNext = true
+				continue
 			}
 		}
 
@@ -141,16 +163,17 @@ func main() {
 
 	// Get QR code content from positional argument
 	if len(positionalArgs) == 0 {
-		fmt.Fprintf(os.Stderr, "Usage: %s <qr-content> [-finder-center=<style>] [-finder-frame=<style>] [-module-shape=<style>]\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s <qr-content> [-finder-center=<style>] [-finder-frame=<style>] [-module-shape=<style>] [-connect=<mode>]\n", os.Args[0])
 		os.Exit(1)
 	}
 	qrContent = positionalArgs[0]
 
 	// Build options from flags
 	opts := qr.Options{
-		FinderCenter: *finderCenter,
-		FinderFrame:  *finderFrame,
-		ModuleShape:  *moduleShape,
+		FinderCenter:  *finderCenter,
+		FinderFrame:   *finderFrame,
+		ModuleShape:   *moduleShape,
+		ModuleConnect: *moduleConnect,
 	}
 
 	// Generate QR code SVG

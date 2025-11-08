@@ -33,6 +33,7 @@ type Options struct {
 	FinderCenter    string // "circle" | "square" | "diamond"
 	FinderFrame     string // "square" | "rounded" | "circle" | "diamond"
 	ModuleShape     string // "square" | "rounded" | "circle" | "diamond"
+	ModuleConnect   string // "horizontal" | "vertical" | "both"
 	ModuleSize      int    // pixels per module; 0 => default 10
 	BackgroundColor string // hex color code (e.g., "#f8f2ec"); empty => default
 	ForegroundColor string // hex color code (e.g., "#552048"); empty => default
@@ -178,7 +179,7 @@ func isInCorner(x, y int, corners CornerBounds) bool {
 	return false
 }
 
-func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBounds, finderCenterStyle string, finderFrameStyle string, moduleShape string, bgColor string, fgColor string) {
+func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBounds, finderCenterStyle string, finderFrameStyle string, moduleShape string, moduleConnect string, bgColor string, fgColor string) {
 	size := len(bitmap) * moduleSize
 
 	// Start SVG
@@ -216,33 +217,70 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 		}
 	default:
 		// Render grouped modules for rounded and square shapes
-		for y := 0; y < len(bitmap); y++ {
-			x := 0
-			for x < len(bitmap[y]) {
-				if bitmap[y][x] && !isInCorner(x, y, corners) {
-					// Found start of a dark run (not in corner)
-					startX := x
+		// Horizontal pass (for "horizontal" or "both" modes)
+		if moduleConnect == "horizontal" || moduleConnect == "both" {
+			for y := 0; y < len(bitmap); y++ {
+				x := 0
+				for x < len(bitmap[y]) {
+					if bitmap[y][x] && !isInCorner(x, y, corners) {
+						// Found start of a dark run (not in corner)
+						startX := x
 
-					// Count consecutive dark modules (not in corners)
-					for x < len(bitmap[y]) && bitmap[y][x] && !isInCorner(x, y, corners) {
+						// Count consecutive dark modules (not in corners)
+						for x < len(bitmap[y]) && bitmap[y][x] && !isInCorner(x, y, corners) {
+							x++
+						}
+						endX := x
+
+						// Draw one shape for the entire run
+						width := (endX - startX) * moduleSize
+						height := moduleSize
+						xPos := startX * moduleSize
+						yPos := y * moduleSize
+
+						if moduleShape == "rounded" {
+							radius := moduleSize / 4
+							canvas.Roundrect(xPos, yPos, width, height, radius, radius, "fill:"+fgColor)
+						} else { // square
+							canvas.Rect(xPos, yPos, width, height, "fill:"+fgColor)
+						}
+					} else {
 						x++
 					}
-					endX := x
+				}
+			}
+		}
 
-					// Draw one shape for the entire run
-					width := (endX - startX) * moduleSize
-					height := moduleSize
-					xPos := startX * moduleSize
-					yPos := y * moduleSize
+		// Vertical pass (for "vertical" or "both" modes)
+		if moduleConnect == "vertical" || moduleConnect == "both" {
+			for x := 0; x < len(bitmap[0]); x++ {
+				y := 0
+				for y < len(bitmap) {
+					if bitmap[y][x] && !isInCorner(x, y, corners) {
+						// Found start of a dark run (not in corner)
+						startY := y
 
-					if moduleShape == "rounded" {
-						radius := moduleSize / 4
-						canvas.Roundrect(xPos, yPos, width, height, radius, radius, "fill:"+fgColor)
-					} else { // square
-						canvas.Rect(xPos, yPos, width, height, "fill:"+fgColor)
+						// Count consecutive dark modules (not in corners)
+						for y < len(bitmap) && bitmap[y][x] && !isInCorner(x, y, corners) {
+							y++
+						}
+						endY := y
+
+						// Draw one shape for the entire run
+						width := moduleSize
+						height := (endY - startY) * moduleSize
+						xPos := x * moduleSize
+						yPos := startY * moduleSize
+
+						if moduleShape == "rounded" {
+							radius := moduleSize / 4
+							canvas.Roundrect(xPos, yPos, width, height, radius, radius, "fill:"+fgColor)
+						} else { // square
+							canvas.Rect(xPos, yPos, width, height, "fill:"+fgColor)
+						}
+					} else {
+						y++
 					}
-				} else {
-					x++
 				}
 			}
 		}
@@ -357,6 +395,9 @@ func GenerateSVG(content string, opts Options) ([]byte, error) {
 	if opts.ModuleShape == "" {
 		opts.ModuleShape = "rounded"
 	}
+	if opts.ModuleConnect == "" {
+		opts.ModuleConnect = "horizontal"
+	}
 	if opts.ModuleSize == 0 {
 		opts.ModuleSize = 10
 	}
@@ -376,6 +417,9 @@ func GenerateSVG(content string, opts Options) ([]byte, error) {
 	}
 	if opts.ModuleShape != "square" && opts.ModuleShape != "rounded" && opts.ModuleShape != "circle" && opts.ModuleShape != "diamond" {
 		return nil, fmt.Errorf("module-shape must be either 'square', 'rounded', 'circle', or 'diamond' (got: %q)", opts.ModuleShape)
+	}
+	if opts.ModuleConnect != "horizontal" && opts.ModuleConnect != "vertical" && opts.ModuleConnect != "both" {
+		return nil, fmt.Errorf("module-connect must be either 'horizontal', 'vertical', or 'both' (got: %q)", opts.ModuleConnect)
 	}
 
 	// Generate QR code
@@ -398,7 +442,7 @@ func GenerateSVG(content string, opts Options) ([]byte, error) {
 	canvas := svg.New(&buf)
 
 	// Render QR code as SVG
-	renderQR(bitmap, opts.ModuleSize, canvas, corners, opts.FinderCenter, opts.FinderFrame, opts.ModuleShape, opts.BackgroundColor, opts.ForegroundColor)
+	renderQR(bitmap, opts.ModuleSize, canvas, corners, opts.FinderCenter, opts.FinderFrame, opts.ModuleShape, opts.ModuleConnect, opts.BackgroundColor, opts.ForegroundColor)
 
 	return buf.Bytes(), nil
 }
