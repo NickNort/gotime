@@ -174,19 +174,13 @@
 <rect x="260" y="320" width="10" height="10" rx="2" ry="2" style="fill:#552048" />
 <rect x="280" y="320" width="10" height="10" rx="2" ry="2" style="fill:#552048" />
 <rect x="310" y="320" width="10" height="10" rx="2" ry="2" style="fill:#552048" />
-<rect x="40" y="40" width="70" height="10" style="fill:#552048" />
-<rect x="40" y="100" width="70" height="10" style="fill:#552048" />
-<rect x="40" y="40" width="10" height="70" style="fill:#552048" />
-<rect x="100" y="40" width="10" height="70" style="fill:#552048" />
+<rect x="40" y="40" width="70" height="70" rx="5" ry="5" style="fill:#552048" />
+<rect x="50" y="50" width="50" height="50" rx="5" ry="5" style="fill:#f8f2ec" />
 <path d="M 75,60 L 90,75 L 75,90 L 60,75 Z" style="fill:#552048" />
-<rect x="260" y="40" width="70" height="10" style="fill:#552048" />
-<rect x="260" y="100" width="70" height="10" style="fill:#552048" />
-<rect x="260" y="40" width="10" height="70" style="fill:#552048" />
-<rect x="320" y="40" width="10" height="70" style="fill:#552048" />
+<rect x="260" y="40" width="70" height="70" rx="5" ry="5" style="fill:#552048" />
+<rect x="270" y="50" width="50" height="50" rx="5" ry="5" style="fill:#f8f2ec" />
 <path d="M 295,60 L 310,75 L 295,90 L 280,75 Z" style="fill:#552048" />
-<rect x="40" y="260" width="70" height="10" style="fill:#552048" />
-<rect x="40" y="320" width="70" height="10" style="fill:#552048" />
-<rect x="40" y="260" width="10" height="70" style="fill:#552048" />
-<rect x="100" y="260" width="10" height="70" style="fill:#552048" />
+<rect x="40" y="260" width="70" height="70" rx="5" ry="5" style="fill:#552048" />
+<rect x="50" y="270" width="50" height="50" rx="5" ry="5" style="fill:#f8f2ec" />
 <path d="M 75,280 L 90,295 L 75,310 L 60,295 Z" style="fill:#552048" />
 </svg>
