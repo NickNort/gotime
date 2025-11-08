@@ -298,15 +298,72 @@ func renderQR(bitmap [][]bool, moduleSize int, canvas *svg.SVG, corners CornerBo
 func main() {
 	// Parse command line flags
 	cornerCenter := flag.String("corner-center", "square", "Corner center style: 'circle', 'square', or 'diamond'")
+	
+	// Parse flags (this stops at first positional arg)
 	flag.Parse()
-
-	// Validate corner center style
-	if *cornerCenter != "circle" && *cornerCenter != "square" && *cornerCenter != "diamond" {
-		panic("corner-center must be either 'circle', 'square', or 'diamond'")
+	
+	// Manually check for flags that come after positional args
+	// Go's flag package stops at first positional arg, so flags after are included in flag.Args()
+	parsedArgs := flag.Args() // Args that flag.Parse() considered positional (includes flags after first pos arg)
+	
+	var qrContent string
+	var positionalArgs []string
+	
+	// Check parsedArgs for flags (they'll be here if they came after the first positional arg)
+	for i, arg := range parsedArgs {
+		if len(arg) > 0 && arg[0] == '-' {
+			// Found a flag in the "positional" args
+			if len(arg) >= 15 && arg[:15] == "-corner-center=" {
+				// Extract value from flag
+				value := arg[15:]
+				if value == "" {
+					fmt.Fprintf(os.Stderr, "Error: corner-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
+					os.Exit(1)
+				}
+				*cornerCenter = value
+				// Positional args are everything before this flag
+				positionalArgs = parsedArgs[:i]
+				break
+			} else if arg == "-corner-center" && i+1 < len(parsedArgs) {
+				// Flag without =, next arg is value
+				value := parsedArgs[i+1]
+				if value == "" {
+					fmt.Fprintf(os.Stderr, "Error: corner-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
+					os.Exit(1)
+				}
+				*cornerCenter = value
+				// Positional args are everything before this flag
+				positionalArgs = parsedArgs[:i]
+				break
+			}
+		}
+	}
+	
+	// If no flag found in parsedArgs, use all parsedArgs as positional
+	if len(positionalArgs) == 0 {
+		positionalArgs = parsedArgs
 	}
 
+	// Validate corner center style (must be done before using it)
+	// Check for empty string explicitly, then check valid values
+	if *cornerCenter == "" {
+		fmt.Fprintf(os.Stderr, "Error: corner-center cannot be empty. Must be 'circle', 'square', or 'diamond'\n")
+		os.Exit(1)
+	}
+	if *cornerCenter != "circle" && *cornerCenter != "square" && *cornerCenter != "diamond" {
+		fmt.Fprintf(os.Stderr, "Error: corner-center must be either 'circle', 'square', or 'diamond' (got: %q)\n", *cornerCenter)
+		os.Exit(1)
+	}
+
+	// Get QR code content from positional argument
+	if len(positionalArgs) == 0 {
+		fmt.Fprintf(os.Stderr, "Usage: %s <qr-content> [-corner-center=<style>]\n", os.Args[0])
+		os.Exit(1)
+	}
+	qrContent = positionalArgs[0]
+
 	// Generate QR code
-	q, err := qrcode.New("https://nickn.dev", qrcode.Highest)
+	q, err := qrcode.New(qrContent, qrcode.Highest)
 	if err != nil {
 		panic(err)
 	}
