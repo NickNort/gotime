@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"strconv"
 
 	"gotime/internal/qr"
 )
@@ -13,11 +14,13 @@ func main() {
 	finderCenter := flag.String("finder-center", "square", "Finder center style: 'circle', 'square', or 'diamond'")
 	finderFrame := flag.String("finder-frame", "square", "Finder frame style: 'square', 'rounded', 'circle', or 'diamond'")
 	moduleShape := flag.String("module-shape", "rounded", "Module shape: 'square', 'rounded', 'circle', or 'diamond'")
+	moduleSize := flag.Int("module-size", 0, "Module size in pixels (0 = default 10)")
 
 	// Shorthand flags (aliases)
 	flag.StringVar(finderCenter, "c", "square", "Shorthand for -finder-center")
 	flag.StringVar(finderFrame, "f", "square", "Shorthand for -finder-frame")
 	flag.StringVar(moduleShape, "m", "rounded", "Shorthand for -module-shape")
+	flag.IntVar(moduleSize, "s", 0, "Shorthand for -module-size")
 
 	// Parse flags (this stops at first positional arg)
 	flag.Parse()
@@ -90,6 +93,24 @@ func main() {
 				}
 				*moduleShape = value
 				continue
+			} else if len(arg) >= 13 && arg[:13] == "-module-size=" {
+				value := arg[13:]
+				size, err := strconv.Atoi(value)
+				if err != nil || size < 0 {
+					fmt.Fprintf(os.Stderr, "Error: module-size must be a non-negative integer\n")
+					os.Exit(1)
+				}
+				*moduleSize = size
+				continue
+			} else if len(arg) >= 3 && arg[:3] == "-s=" {
+				value := arg[3:]
+				size, err := strconv.Atoi(value)
+				if err != nil || size < 0 {
+					fmt.Fprintf(os.Stderr, "Error: module-size must be a non-negative integer\n")
+					os.Exit(1)
+				}
+				*moduleSize = size
+				continue
 			}
 
 			// Handle -flag value format
@@ -132,6 +153,24 @@ func main() {
 				*moduleShape = value
 				skipNext = true
 				continue
+			} else if arg == "-module-size" || arg == "-s" {
+				if i+1 >= len(parsedArgs) {
+					fmt.Fprintf(os.Stderr, "Error: module-size requires a value (non-negative integer)\n")
+					os.Exit(1)
+				}
+				value := parsedArgs[i+1]
+				if value == "" || (len(value) > 0 && value[0] == '-') {
+					fmt.Fprintf(os.Stderr, "Error: module-size must be a non-negative integer\n")
+					os.Exit(1)
+				}
+				size, err := strconv.Atoi(value)
+				if err != nil || size < 0 {
+					fmt.Fprintf(os.Stderr, "Error: module-size must be a non-negative integer\n")
+					os.Exit(1)
+				}
+				*moduleSize = size
+				skipNext = true
+				continue
 			}
 		}
 
@@ -141,7 +180,7 @@ func main() {
 
 	// Get QR code content from positional argument
 	if len(positionalArgs) == 0 {
-		fmt.Fprintf(os.Stderr, "Usage: %s <qr-content> [-finder-center=<style>] [-finder-frame=<style>] [-module-shape=<style>]\n", os.Args[0])
+		fmt.Fprintf(os.Stderr, "Usage: %s <qr-content> [-finder-center=<style>] [-finder-frame=<style>] [-module-shape=<style>] [-module-size=<pixels>]\n", os.Args[0])
 		os.Exit(1)
 	}
 	qrContent = positionalArgs[0]
@@ -151,6 +190,7 @@ func main() {
 		FinderCenter: *finderCenter,
 		FinderFrame:  *finderFrame,
 		ModuleShape:  *moduleShape,
+		ModuleSize:   *moduleSize,
 	}
 
 	// Generate QR code SVG
