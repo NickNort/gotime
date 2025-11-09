@@ -63,6 +63,7 @@ func printBoolMatrix(opts pbmOpts) {
 		}
 		println()
 	}
+	println()
 }
 
 // arguments for printIntmatrix() so that `label` is optional
@@ -105,6 +106,7 @@ func printCoordMatrix(opts pcmOpts) {
 		}
 		println()
 	}
+	println()
 }
 
 func algo(bitmap [][]bool) ([][]Coord, error) {
@@ -121,8 +123,8 @@ func algo(bitmap [][]bool) ([][]Coord, error) {
 	visitedMatrix := makeVisitedMatrix(bitmap)
 
 	printBoolMatrix(pbmOpts{label: "bitmap:", m: bitmap})
-	printBoolMatrix(pbmOpts{label: "visitedMatrix:", m: visitedMatrix})
-	print("sizeY: ", sizeY, "\n")
+	// printBoolMatrix(pbmOpts{label: "visitedMatrix:", m: visitedMatrix})
+	// print("sizeY: ", sizeY, "\n")
 
 	res := new([][]Coord)
 	var currentGroup *[]Coord
@@ -336,6 +338,5 @@ func runTests() {
 }
 
 func main() {
-	// runTests()
-	
+	runTests()
 }
