@@ -157,19 +157,13 @@ func DFS(bitmap [][]bool, visitedMatrix [][]bool, x int, y int, currentGroup *[]
 	return true
 }
 
-func main() {
+func runTests() {
 	// Initialize a 2D bool array for testing
 	bitmap1 := [][]bool{
 		{true, false, true},
 		{false, true, false},
 		{true, true, false},
 		{true, true, true},
-	}
-
-	bitmap2 := [][]bool{
-		{true, false, true, true},
-		{false, true, false, true},
-		{true, true, false, true},
 	}
 
 	res1, err := algo(bitmap1)
@@ -179,10 +173,169 @@ func main() {
 	printBoolMatrix(pbmOpts{label: "bitmap1 with groups:", m: bitmap1, coords: res1})
 	printCoordMatrix(pcmOpts{label: "res1:", coords: res1})
 
+	bitmap2 := [][]bool{
+		{true, false, true, true},
+		{false, true, false, true},
+		{true, true, false, true},
+	}
+
 	res2, err := algo(bitmap2)
 	if err != nil {
 		fmt.Printf("Error processing bitmap2: %v\n", err)
 	}
 	printBoolMatrix(pbmOpts{label: "bitmap2 with groups:", m: bitmap2, coords: res2})
 	printCoordMatrix(pcmOpts{label: "res2:", coords: res2})
+
+	bitmap3 := [][]bool{
+		{true, true, true, true},
+		{true, true, true, true},
+		{true, true, true, true},
+	}
+
+	res3, err := algo(bitmap3)
+	if err != nil {
+		fmt.Printf("Error processing bitmap3: %v\n", err)
+	}
+	printBoolMatrix(pbmOpts{label: "bitmap3 with groups:", m: bitmap3, coords: res3})
+	printCoordMatrix(pcmOpts{label: "res3:", coords: res3})
+
+	bitmap4 := [][]bool{
+		{true, false, false, false},
+		{false, true, false, false},
+		{false, false, true, false},
+		{false, false, false, true},
+	}
+
+	res4, err := algo(bitmap4)
+	if err != nil {
+		fmt.Printf("Error processing bitmap4: %v\n", err)
+	}
+	printBoolMatrix(pbmOpts{label: "bitmap4 with groups:", m: bitmap4, coords: res4})
+	printCoordMatrix(pcmOpts{label: "res4:", coords: res4})
+
+	bitmap5 := [][]bool{
+		{false, false, false, false},
+		{false, true, true, false},
+		{false, true, false, false},
+		{false, true, true, false},
+		{false, false, false, false},
+	}
+
+	res5, err := algo(bitmap5)
+	if err != nil {
+		fmt.Printf("Error processing bitmap5: %v\n", err)
+	}
+	printBoolMatrix(pbmOpts{label: "bitmap5 with groups:", m: bitmap5, coords: res5})
+	printCoordMatrix(pcmOpts{label: "res5:", coords: res5})
+
+	bitmap6 := [][]bool{
+		{false, false, false},
+		{false, false, false},
+		{false, false, false},
+	}
+
+	res6, err := algo(bitmap6)
+	if err != nil {
+		fmt.Printf("Error processing bitmap6: %v\n", err)
+	}
+	printBoolMatrix(pbmOpts{label: "bitmap6 with groups:", m: bitmap6, coords: res6})
+	printCoordMatrix(pcmOpts{label: "res6:", coords: res6})
+
+	bitmap7 := [][]bool{
+		{true},
+	}
+
+	res7, err := algo(bitmap7)
+	if err != nil {
+		fmt.Printf("Error processing bitmap7: %v\n", err)
+	}
+	printBoolMatrix(pbmOpts{label: "bitmap7 with groups:", m: bitmap7, coords: res7})
+	printCoordMatrix(pcmOpts{label: "res7:", coords: res7})
+
+	bitmap8 := [][]bool{
+		{true, false, true, false},
+		{false, true, false, true},
+		{true, false, true, false},
+		{false, true, false, true},
+	}
+
+	res8, err := algo(bitmap8)
+	if err != nil {
+		fmt.Printf("Error processing bitmap8: %v\n", err)
+	}
+	printBoolMatrix(pbmOpts{label: "bitmap8 with groups:", m: bitmap8, coords: res8})
+	printCoordMatrix(pcmOpts{label: "res8:", coords: res8})
+
+	bitmap9 := [][]bool{
+		{false, false, true, false, false},
+		{false, false, true, false, false},
+		{true, true, true, true, true},
+		{false, false, true, false, false},
+		{false, false, true, false, false},
+	}
+
+	res9, err := algo(bitmap9)
+	if err != nil {
+		fmt.Printf("Error processing bitmap9: %v\n", err)
+	}
+	printBoolMatrix(pbmOpts{label: "bitmap9 with groups:", m: bitmap9, coords: res9})
+	printCoordMatrix(pcmOpts{label: "res9:", coords: res9})
+
+	bitmap10 := [][]bool{
+		{true, true, true, true, true},
+		{true, false, false, false, true},
+		{true, false, false, false, true},
+		{true, false, false, false, true},
+		{true, true, true, true, true},
+	}
+
+	res10, err := algo(bitmap10)
+	if err != nil {
+		fmt.Printf("Error processing bitmap10: %v\n", err)
+	}
+	printBoolMatrix(pbmOpts{label: "bitmap10 with groups:", m: bitmap10, coords: res10})
+	printCoordMatrix(pcmOpts{label: "res10:", coords: res10})
+
+	bitmap11 := [][]bool{}
+
+	res11, err := algo(bitmap11)
+	if err != nil {
+		fmt.Printf("Error processing bitmap11: %v\n", err)
+	} else {
+		printBoolMatrix(pbmOpts{label: "bitmap11 with groups:", m: bitmap11, coords: res11})
+		printCoordMatrix(pcmOpts{label: "res11:", coords: res11})
+	}
+
+	bitmap12 := [][]bool{
+		{true, false, true},
+		{},
+		{false, true, false},
+	}
+
+	res12, err := algo(bitmap12)
+	if err != nil {
+		fmt.Printf("Error processing bitmap12: %v\n", err)
+	} else {
+		printBoolMatrix(pbmOpts{label: "bitmap12 with groups:", m: bitmap12, coords: res12})
+		printCoordMatrix(pcmOpts{label: "res12:", coords: res12})
+	}
+
+	bitmap13 := [][]bool{
+		{true, false, true, false},
+		{false, true},
+		{true, false, true, false},
+	}
+
+	res13, err := algo(bitmap13)
+	if err != nil {
+		fmt.Printf("Error processing bitmap13: %v\n", err)
+	} else {
+		printBoolMatrix(pbmOpts{label: "bitmap13 with groups:", m: bitmap13, coords: res13})
+		printCoordMatrix(pcmOpts{label: "res13:", coords: res13})
+	}
+}
+
+func main() {
+	// runTests()
+	
 }
