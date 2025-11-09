@@ -463,6 +463,379 @@ func testSquarePathSingleSVG() {
 	fmt.Printf("  Position: (%d, %d), Size: %d\n", topLeftX, topLeftY, squareSize)
 }
 
+func testDiamondPath() {
+	fmt.Println("Testing DiamondPath...")
+
+	// Test with x=10, y=20, size=10
+	path := DiamondPath(10, 20, 10)
+
+	// Verify we have 4 points
+	if len(path.points) != 4 {
+		fmt.Printf("FAIL: Expected 4 points, got %d\n", len(path.points))
+		return
+	}
+
+	// Verify points are correct: top (15,20), right (20,15), bottom (15,10), left (10,15)
+	expectedPoints := []Coord{
+		{X: 15, Y: 20}, // top
+		{X: 20, Y: 15}, // right
+		{X: 15, Y: 10}, // bottom
+		{X: 10, Y: 15}, // left
+	}
+
+	for i, expected := range expectedPoints {
+		if path.points[i].X != expected.X || path.points[i].Y != expected.Y {
+			fmt.Printf("FAIL: Point %d expected (%d,%d), got (%d,%d)\n",
+				i, expected.X, expected.Y, path.points[i].X, path.points[i].Y)
+			return
+		}
+	}
+
+	// Verify path string
+	expectedPath := "M 15,20 L 20,15 L 15,10 L 10,15 Z"
+	if path.path != expectedPath {
+		fmt.Printf("FAIL: Expected path '%s', got '%s'\n", expectedPath, path.path)
+		return
+	}
+
+	fmt.Println("PASS: DiamondPath test passed!")
+	fmt.Printf("  Points: %v\n", path.points)
+	fmt.Printf("  Path: %s\n", path.path)
+}
+
+func testDiamondPathSVG1() {
+	fmt.Println("Testing DiamondPath with SVG generation...")
+
+	// Create multiple diamonds at different positions
+	diamonds := []struct {
+		x, y, size int
+		fill       string
+	}{
+		{50, 200, 30, "#ff6b6b"},
+		{100, 200, 30, "#4ecdc4"},
+		{150, 200, 30, "#45b7d1"},
+		{200, 200, 30, "#f9ca24"},
+		{250, 200, 30, "#6c5ce7"},
+		{100, 150, 50, "#a29bfe"},
+		{175, 100, 40, "#fd79a8"},
+		{50, 100, 25, "#00b894"},
+		{300, 150, 35, "#e17055"},
+	}
+
+	// Start building SVG content
+	svgContent := `<?xml version="1.0"?>
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="400" height="300" style="fill:#f8f9fa" />
+`
+
+	// Generate paths for each diamond
+	for i, d := range diamonds {
+		path := DiamondPath(d.x, d.y, d.size)
+		svgContent += fmt.Sprintf(`<path d="%s" style="fill:%s;stroke:#2d3436;stroke-width:2" />`+"\n", path.path, d.fill)
+		fmt.Printf("  Diamond %d: %s\n", i+1, path.path)
+	}
+
+	svgContent += `</svg>`
+
+	// Write to file
+	filename := "test_diamondpath.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  Generated %d diamonds\n", len(diamonds))
+}
+
+func testDiamondPathSingleSVG() {
+	fmt.Println("Testing DiamondPath with single centered diamond...")
+
+	// SVG dimensions
+	svgWidth := 400
+	svgHeight := 300
+	diamondSize := 150
+
+	// Calculate center position
+	centerX := svgWidth / 2
+	centerY := svgHeight / 2
+
+	// Calculate top position (DiamondPath draws upward, so y is the top)
+	topX := centerX - diamondSize/2
+	topY := centerY + diamondSize/2
+
+	// Generate the diamond path
+	path := DiamondPath(topX, topY, diamondSize)
+
+	// Build SVG content
+	svgContent := fmt.Sprintf(`<?xml version="1.0"?>
+<svg width="%d" height="%d" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="%d" height="%d" style="fill:#ffffff" />
+<path d="%s" style="fill:#4a90e2;stroke:#2d3436;stroke-width:3" />
+</svg>`, svgWidth, svgHeight, svgWidth, svgHeight, path.path)
+
+	// Write to file
+	filename := "test_diamondpath_single.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  Diamond path: %s\n", path.path)
+	fmt.Printf("  Position: (%d, %d), Size: %d\n", topX, topY, diamondSize)
+}
+
+func testTrianglePath() {
+	fmt.Println("Testing TrianglePath...")
+
+	// Test with x=10, y=20, size=10
+	path := TrianglePath(10, 20, 10)
+
+	// Verify we have 3 points
+	if len(path.points) != 3 {
+		fmt.Printf("FAIL: Expected 3 points, got %d\n", len(path.points))
+		return
+	}
+
+	// Verify points are correct: top left (10,20), top right (20,20), bottom (15,10)
+	expectedPoints := []Coord{
+		{X: 10, Y: 20}, // top left (base)
+		{X: 20, Y: 20}, // top right (base)
+		{X: 15, Y: 10}, // bottom (apex)
+	}
+
+	for i, expected := range expectedPoints {
+		if path.points[i].X != expected.X || path.points[i].Y != expected.Y {
+			fmt.Printf("FAIL: Point %d expected (%d,%d), got (%d,%d)\n",
+				i, expected.X, expected.Y, path.points[i].X, path.points[i].Y)
+			return
+		}
+	}
+
+	// Verify path string
+	expectedPath := "M 10,20 L 20,20 L 15,10 Z"
+	if path.path != expectedPath {
+		fmt.Printf("FAIL: Expected path '%s', got '%s'\n", expectedPath, path.path)
+		return
+	}
+
+	fmt.Println("PASS: TrianglePath test passed!")
+	fmt.Printf("  Points: %v\n", path.points)
+	fmt.Printf("  Path: %s\n", path.path)
+}
+
+func testTrianglePathSVG1() {
+	fmt.Println("Testing TrianglePath with SVG generation...")
+
+	// Create multiple triangles at different positions
+	triangles := []struct {
+		x, y, size int
+		fill       string
+	}{
+		{50, 200, 30, "#ff6b6b"},
+		{100, 200, 30, "#4ecdc4"},
+		{150, 200, 30, "#45b7d1"},
+		{200, 200, 30, "#f9ca24"},
+		{250, 200, 30, "#6c5ce7"},
+		{100, 150, 50, "#a29bfe"},
+		{175, 100, 40, "#fd79a8"},
+		{50, 100, 25, "#00b894"},
+		{300, 150, 35, "#e17055"},
+	}
+
+	// Start building SVG content
+	svgContent := `<?xml version="1.0"?>
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="400" height="300" style="fill:#f8f9fa" />
+`
+
+	// Generate paths for each triangle
+	for i, t := range triangles {
+		path := TrianglePath(t.x, t.y, t.size)
+		svgContent += fmt.Sprintf(`<path d="%s" style="fill:%s;stroke:#2d3436;stroke-width:2" />`+"\n", path.path, t.fill)
+		fmt.Printf("  Triangle %d: %s\n", i+1, path.path)
+	}
+
+	svgContent += `</svg>`
+
+	// Write to file
+	filename := "test_trianglepath.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  Generated %d triangles\n", len(triangles))
+}
+
+func testTrianglePathSingleSVG() {
+	fmt.Println("Testing TrianglePath with single centered triangle...")
+
+	// SVG dimensions
+	svgWidth := 400
+	svgHeight := 300
+	triangleSize := 150
+
+	// Calculate center position
+	centerX := svgWidth / 2
+	centerY := svgHeight / 2
+
+	// Calculate top position (TrianglePath draws downward, so y is the top of the base)
+	topX := centerX - triangleSize/2
+	topY := centerY + triangleSize/2
+
+	// Generate the triangle path
+	path := TrianglePath(topX, topY, triangleSize)
+
+	// Build SVG content
+	svgContent := fmt.Sprintf(`<?xml version="1.0"?>
+<svg width="%d" height="%d" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="%d" height="%d" style="fill:#ffffff" />
+<path d="%s" style="fill:#4a90e2;stroke:#2d3436;stroke-width:3" />
+</svg>`, svgWidth, svgHeight, svgWidth, svgHeight, path.path)
+
+	// Write to file
+	filename := "test_trianglepath_single.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  Triangle path: %s\n", path.path)
+	fmt.Printf("  Position: (%d, %d), Size: %d\n", topX, topY, triangleSize)
+}
+
+func testInverseTrianglePath() {
+	fmt.Println("Testing InverseTrianglePath...")
+
+	// Test with x=10, y=20, size=10
+	path := InverseTrianglePath(10, 20, 10)
+
+	// Verify we have 3 points
+	if len(path.points) != 3 {
+		fmt.Printf("FAIL: Expected 3 points, got %d\n", len(path.points))
+		return
+	}
+
+	// Verify points are correct: top (15,20), bottom right (20,10), bottom left (10,10)
+	expectedPoints := []Coord{
+		{X: 15, Y: 20}, // top (apex)
+		{X: 20, Y: 10}, // bottom right
+		{X: 10, Y: 10}, // bottom left
+	}
+
+	for i, expected := range expectedPoints {
+		if path.points[i].X != expected.X || path.points[i].Y != expected.Y {
+			fmt.Printf("FAIL: Point %d expected (%d,%d), got (%d,%d)\n",
+				i, expected.X, expected.Y, path.points[i].X, path.points[i].Y)
+			return
+		}
+	}
+
+	// Verify path string
+	expectedPath := "M 15,20 L 20,10 L 10,10 Z"
+	if path.path != expectedPath {
+		fmt.Printf("FAIL: Expected path '%s', got '%s'\n", expectedPath, path.path)
+		return
+	}
+
+	fmt.Println("PASS: InverseTrianglePath test passed!")
+	fmt.Printf("  Points: %v\n", path.points)
+	fmt.Printf("  Path: %s\n", path.path)
+}
+
+func testInverseTrianglePathSVG1() {
+	fmt.Println("Testing InverseTrianglePath with SVG generation...")
+
+	// Create multiple inverse triangles at different positions
+	inverseTriangles := []struct {
+		x, y, size int
+		fill       string
+	}{
+		{50, 200, 30, "#ff6b6b"},
+		{100, 200, 30, "#4ecdc4"},
+		{150, 200, 30, "#45b7d1"},
+		{200, 200, 30, "#f9ca24"},
+		{250, 200, 30, "#6c5ce7"},
+		{100, 150, 50, "#a29bfe"},
+		{175, 100, 40, "#fd79a8"},
+		{50, 100, 25, "#00b894"},
+		{300, 150, 35, "#e17055"},
+	}
+
+	// Start building SVG content
+	svgContent := `<?xml version="1.0"?>
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="400" height="300" style="fill:#f8f9fa" />
+`
+
+	// Generate paths for each inverse triangle
+	for i, t := range inverseTriangles {
+		path := InverseTrianglePath(t.x, t.y, t.size)
+		svgContent += fmt.Sprintf(`<path d="%s" style="fill:%s;stroke:#2d3436;stroke-width:2" />`+"\n", path.path, t.fill)
+		fmt.Printf("  InverseTriangle %d: %s\n", i+1, path.path)
+	}
+
+	svgContent += `</svg>`
+
+	// Write to file
+	filename := "test_inversetrianglepath.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  Generated %d inverse triangles\n", len(inverseTriangles))
+}
+
+func testInverseTrianglePathSingleSVG() {
+	fmt.Println("Testing InverseTrianglePath with single centered inverse triangle...")
+
+	// SVG dimensions
+	svgWidth := 400
+	svgHeight := 300
+	triangleSize := 150
+
+	// Calculate center position
+	centerX := svgWidth / 2
+	centerY := svgHeight / 2
+
+	// Calculate top position (InverseTrianglePath draws upward, so y is the top)
+	topX := centerX - triangleSize/2
+	topY := centerY + triangleSize/2
+
+	// Generate the inverse triangle path
+	path := InverseTrianglePath(topX, topY, triangleSize)
+
+	// Build SVG content
+	svgContent := fmt.Sprintf(`<?xml version="1.0"?>
+<svg width="%d" height="%d" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="%d" height="%d" style="fill:#ffffff" />
+<path d="%s" style="fill:#4a90e2;stroke:#2d3436;stroke-width:3" />
+</svg>`, svgWidth, svgHeight, svgWidth, svgHeight, path.path)
+
+	// Write to file
+	filename := "test_inversetrianglepath_single.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  InverseTriangle path: %s\n", path.path)
+	fmt.Printf("  Position: (%d, %d), Size: %d\n", topX, topY, triangleSize)
+}
+
 func main() {
 	// testing the Connected Component Analysis algorithm
 	// runCCATests()
@@ -475,4 +848,13 @@ func main() {
 
 	// testing SquarePath with single centered square
 	testSquarePathSingleSVG()
+
+	testDiamondPathSVG1()
+	testDiamondPathSingleSVG()
+
+	testInverseTrianglePathSVG1()
+	testInverseTrianglePathSingleSVG()
+
+	testTrianglePathSVG1()
+	testTrianglePathSingleSVG()
 }

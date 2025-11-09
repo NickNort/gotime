@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="400" height="300" style="fill:#f8f9fa" />
+<path d="M 65,200 L 80,170 L 50,170 Z" style="fill:#ff6b6b;stroke:#2d3436;stroke-width:2" />
+<path d="M 115,200 L 130,170 L 100,170 Z" style="fill:#4ecdc4;stroke:#2d3436;stroke-width:2" />
+<path d="M 165,200 L 180,170 L 150,170 Z" style="fill:#45b7d1;stroke:#2d3436;stroke-width:2" />
+<path d="M 215,200 L 230,170 L 200,170 Z" style="fill:#f9ca24;stroke:#2d3436;stroke-width:2" />
+<path d="M 265,200 L 280,170 L 250,170 Z" style="fill:#6c5ce7;stroke:#2d3436;stroke-width:2" />
+<path d="M 125,150 L 150,100 L 100,100 Z" style="fill:#a29bfe;stroke:#2d3436;stroke-width:2" />
+<path d="M 195,100 L 215,60 L 175,60 Z" style="fill:#fd79a8;stroke:#2d3436;stroke-width:2" />
+<path d="M 62,100 L 75,75 L 50,75 Z" style="fill:#00b894;stroke:#2d3436;stroke-width:2" />
+<path d="M 317,150 L 335,115 L 300,115 Z" style="fill:#e17055;stroke:#2d3436;stroke-width:2" />
+</svg>
