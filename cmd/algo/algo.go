@@ -836,9 +836,395 @@ func testInverseTrianglePathSingleSVG() {
 	fmt.Printf("  Position: (%d, %d), Size: %d\n", topX, topY, triangleSize)
 }
 
+func testHalfCircleLeftHalfSquarePath() {
+	fmt.Println("Testing HalfCircleLeftHalfSquarePath...")
+
+	// Test with x=10, y=20, size=10
+	path := HalfCircleLeftHalfSquarePath(10, 20, 10)
+
+	// Verify we have 4 points
+	if len(path.points) != 4 {
+		fmt.Printf("FAIL: Expected 4 points, got %d\n", len(path.points))
+		return
+	}
+
+	// Verify points are correct: top left (10,20), bottom left (10,10), bottom right (20,10), top right (20,20)
+	expectedPoints := []Coord{
+		{X: 10, Y: 20}, // top left
+		{X: 10, Y: 10}, // bottom left
+		{X: 20, Y: 10}, // bottom right
+		{X: 20, Y: 20}, // top right
+	}
+
+	for i, expected := range expectedPoints {
+		if path.points[i].X != expected.X || path.points[i].Y != expected.Y {
+			fmt.Printf("FAIL: Point %d expected (%d,%d), got (%d,%d)\n",
+				i, expected.X, expected.Y, path.points[i].X, path.points[i].Y)
+			return
+		}
+	}
+
+	// Verify path string contains arc command
+	expectedPathStart := "M 10,20 A"
+	if len(path.path) < len(expectedPathStart) || path.path[:len(expectedPathStart)] != expectedPathStart {
+		fmt.Printf("FAIL: Expected path to start with '%s', got '%s'\n", expectedPathStart, path.path)
+		return
+	}
+
+	// Verify path contains arc and lines
+	if len(path.path) == 0 {
+		fmt.Printf("FAIL: Path string is empty\n")
+		return
+	}
+
+	fmt.Println("PASS: HalfCircleLeftHalfSquarePath test passed!")
+	fmt.Printf("  Points: %v\n", path.points)
+	fmt.Printf("  Path: %s\n", path.path)
+}
+
+func testHalfCircleLeftHalfSquarePathSVG1() {
+	fmt.Println("Testing HalfCircleLeftHalfSquarePath with SVG generation...")
+
+	// Create multiple half-circle-half-square shapes at different positions
+	shapes := []struct {
+		x, y, size int
+		fill       string
+	}{
+		{50, 200, 30, "#ff6b6b"},
+		{100, 200, 30, "#4ecdc4"},
+		{150, 200, 30, "#45b7d1"},
+		{200, 200, 30, "#f9ca24"},
+		{250, 200, 30, "#6c5ce7"},
+		{100, 150, 50, "#a29bfe"},
+		{175, 100, 40, "#fd79a8"},
+		{50, 100, 25, "#00b894"},
+		{300, 150, 35, "#e17055"},
+	}
+
+	// Start building SVG content
+	svgContent := `<?xml version="1.0"?>
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="400" height="300" style="fill:#f8f9fa" />
+`
+
+	// Generate paths for each shape
+	for i, s := range shapes {
+		path := HalfCircleLeftHalfSquarePath(s.x, s.y, s.size)
+		svgContent += fmt.Sprintf(`<path d="%s" style="fill:%s;stroke:#2d3436;stroke-width:2" />`+"\n", path.path, s.fill)
+		fmt.Printf("  HalfCircleLeftHalfSquare %d: %s\n", i+1, path.path)
+	}
+
+	svgContent += `</svg>`
+
+	// Write to file
+	filename := "test_halfcirclelefthalfsquarepath.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  Generated %d half-circle-half-square shapes\n", len(shapes))
+}
+
+func testHalfCircleLeftHalfSquarePathSingleSVG() {
+	fmt.Println("Testing HalfCircleLeftHalfSquarePath with single centered shape...")
+
+	// SVG dimensions
+	svgWidth := 400
+	svgHeight := 300
+	shapeSize := 150
+
+	// Calculate center position
+	centerX := svgWidth / 2
+	centerY := svgHeight / 2
+
+	// Calculate top-left position (HalfCircleLeftHalfSquarePath draws upward, so y is the top)
+	topLeftX := centerX - shapeSize/2
+	topLeftY := centerY + shapeSize/2
+
+	// Generate the half-circle-half-square path
+	path := HalfCircleLeftHalfSquarePath(topLeftX, topLeftY, shapeSize)
+
+	// Build SVG content
+	svgContent := fmt.Sprintf(`<?xml version="1.0"?>
+<svg width="%d" height="%d" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="%d" height="%d" style="fill:#ffffff" />
+<path d="%s" style="fill:#4a90e2;stroke:#2d3436;stroke-width:3" />
+</svg>`, svgWidth, svgHeight, svgWidth, svgHeight, path.path)
+
+	// Write to file
+	filename := "test_halfcirclelefthalfsquarepath_single.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  HalfCircleLeftHalfSquare path: %s\n", path.path)
+	fmt.Printf("  Position: (%d, %d), Size: %d\n", topLeftX, topLeftY, shapeSize)
+}
+
+func testHalfCircleTopHalfSquarePathSVG1() {
+	fmt.Println("Testing HalfCircleTopHalfSquarePath with SVG generation...")
+
+	// Create multiple half-circle-top-half-square shapes at different positions
+	shapes := []struct {
+		x, y, size int
+		fill       string
+	}{
+		{50, 200, 30, "#ff6b6b"},
+		{100, 200, 30, "#4ecdc4"},
+		{150, 200, 30, "#45b7d1"},
+		{200, 200, 30, "#f9ca24"},
+		{250, 200, 30, "#6c5ce7"},
+		{100, 150, 50, "#a29bfe"},
+		{175, 100, 40, "#fd79a8"},
+		{50, 100, 25, "#00b894"},
+		{300, 150, 35, "#e17055"},
+	}
+
+	// Start building SVG content
+	svgContent := `<?xml version="1.0"?>
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="400" height="300" style="fill:#f8f9fa" />
+`
+
+	// Generate paths for each shape
+	for i, s := range shapes {
+		path := HalfCircleTopHalfSquarePath(s.x, s.y, s.size)
+		svgContent += fmt.Sprintf(`<path d="%s" style="fill:%s;stroke:#2d3436;stroke-width:2" />`+"\n", path.path, s.fill)
+		fmt.Printf("  HalfCircleTopHalfSquare %d: %s\n", i+1, path.path)
+	}
+
+	svgContent += `</svg>`
+
+	// Write to file
+	filename := "test_halfcircletophalfsquarepath.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  Generated %d half-circle-top-half-square shapes\n", len(shapes))
+}
+
+func testHalfCircleTopHalfSquarePathSingleSVG() {
+	fmt.Println("Testing HalfCircleTopHalfSquarePath with single centered shape...")
+
+	// SVG dimensions
+	svgWidth := 400
+	svgHeight := 300
+	shapeSize := 150
+
+	// Calculate center position
+	centerX := svgWidth / 2
+	centerY := svgHeight / 2
+
+	// Calculate top-left position (HalfCircleTopHalfSquarePath draws upward, so y is the top)
+	topLeftX := centerX - shapeSize/2
+	topLeftY := centerY + shapeSize/2
+
+	// Generate the half-circle-top-half-square path
+	path := HalfCircleTopHalfSquarePath(topLeftX, topLeftY, shapeSize)
+
+	// Build SVG content
+	svgContent := fmt.Sprintf(`<?xml version="1.0"?>
+<svg width="%d" height="%d" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="%d" height="%d" style="fill:#ffffff" />
+<path d="%s" style="fill:#4a90e2;stroke:#2d3436;stroke-width:3" />
+</svg>`, svgWidth, svgHeight, svgWidth, svgHeight, path.path)
+
+	// Write to file
+	filename := "test_halfcircletophalfsquarepath_single.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  HalfCircleTopHalfSquare path: %s\n", path.path)
+	fmt.Printf("  Position: (%d, %d), Size: %d\n", topLeftX, topLeftY, shapeSize)
+}
+
+func testHalfCircleRightHalfSquarePathSVG1() {
+	fmt.Println("Testing HalfCircleRightHalfSquarePath with SVG generation...")
+
+	// Create multiple half-circle-right-half-square shapes at different positions
+	shapes := []struct {
+		x, y, size int
+		fill       string
+	}{
+		{50, 200, 30, "#ff6b6b"},
+		{100, 200, 30, "#4ecdc4"},
+		{150, 200, 30, "#45b7d1"},
+		{200, 200, 30, "#f9ca24"},
+		{250, 200, 30, "#6c5ce7"},
+		{100, 150, 50, "#a29bfe"},
+		{175, 100, 40, "#fd79a8"},
+		{50, 100, 25, "#00b894"},
+		{300, 150, 35, "#e17055"},
+	}
+
+	// Start building SVG content
+	svgContent := `<?xml version="1.0"?>
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="400" height="300" style="fill:#f8f9fa" />
+`
+
+	// Generate paths for each shape
+	for i, s := range shapes {
+		path := HalfCircleRightHalfSquarePath(s.x, s.y, s.size)
+		svgContent += fmt.Sprintf(`<path d="%s" style="fill:%s;stroke:#2d3436;stroke-width:2" />`+"\n", path.path, s.fill)
+		fmt.Printf("  HalfCircleRightHalfSquare %d: %s\n", i+1, path.path)
+	}
+
+	svgContent += `</svg>`
+
+	// Write to file
+	filename := "test_halfcirclerighthalfsquarepath.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  Generated %d half-circle-right-half-square shapes\n", len(shapes))
+}
+
+func testHalfCircleRightHalfSquarePathSingleSVG() {
+	fmt.Println("Testing HalfCircleRightHalfSquarePath with single centered shape...")
+
+	// SVG dimensions
+	svgWidth := 400
+	svgHeight := 300
+	shapeSize := 150
+
+	// Calculate center position
+	centerX := svgWidth / 2
+	centerY := svgHeight / 2
+
+	// Calculate top-left position (HalfCircleRightHalfSquarePath draws upward, so y is the top)
+	topLeftX := centerX - shapeSize/2
+	topLeftY := centerY + shapeSize/2
+
+	// Generate the half-circle-right-half-square path
+	path := HalfCircleRightHalfSquarePath(topLeftX, topLeftY, shapeSize)
+
+	// Build SVG content
+	svgContent := fmt.Sprintf(`<?xml version="1.0"?>
+<svg width="%d" height="%d" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="%d" height="%d" style="fill:#ffffff" />
+<path d="%s" style="fill:#4a90e2;stroke:#2d3436;stroke-width:3" />
+</svg>`, svgWidth, svgHeight, svgWidth, svgHeight, path.path)
+
+	// Write to file
+	filename := "test_halfcirclerighthalfsquarepath_single.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  HalfCircleRightHalfSquare path: %s\n", path.path)
+	fmt.Printf("  Position: (%d, %d), Size: %d\n", topLeftX, topLeftY, shapeSize)
+}
+
+func testHalfCircleBottomHalfSquarePathSVG1() {
+	fmt.Println("Testing HalfCircleBottomHalfSquarePath with SVG generation...")
+
+	// Create multiple half-circle-bottom-half-square shapes at different positions
+	shapes := []struct {
+		x, y, size int
+		fill       string
+	}{
+		{50, 200, 30, "#ff6b6b"},
+		{100, 200, 30, "#4ecdc4"},
+		{150, 200, 30, "#45b7d1"},
+		{200, 200, 30, "#f9ca24"},
+		{250, 200, 30, "#6c5ce7"},
+		{100, 150, 50, "#a29bfe"},
+		{175, 100, 40, "#fd79a8"},
+		{50, 100, 25, "#00b894"},
+		{300, 150, 35, "#e17055"},
+	}
+
+	// Start building SVG content
+	svgContent := `<?xml version="1.0"?>
+<svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="400" height="300" style="fill:#f8f9fa" />
+`
+
+	// Generate paths for each shape
+	for i, s := range shapes {
+		path := HalfCircleBottomHalfSquarePath(s.x, s.y, s.size)
+		svgContent += fmt.Sprintf(`<path d="%s" style="fill:%s;stroke:#2d3436;stroke-width:2" />`+"\n", path.path, s.fill)
+		fmt.Printf("  HalfCircleBottomHalfSquare %d: %s\n", i+1, path.path)
+	}
+
+	svgContent += `</svg>`
+
+	// Write to file
+	filename := "test_halfcirclebottomhalfsquarepath.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  Generated %d half-circle-bottom-half-square shapes\n", len(shapes))
+}
+
+func testHalfCircleBottomHalfSquarePathSingleSVG() {
+	fmt.Println("Testing HalfCircleBottomHalfSquarePath with single centered shape...")
+
+	// SVG dimensions
+	svgWidth := 400
+	svgHeight := 300
+	shapeSize := 150
+
+	// Calculate center position
+	centerX := svgWidth / 2
+	centerY := svgHeight / 2
+
+	// Calculate top-left position (HalfCircleBottomHalfSquarePath draws upward, so y is the top)
+	topLeftX := centerX - shapeSize/2
+	topLeftY := centerY + shapeSize/2
+
+	// Generate the half-circle-bottom-half-square path
+	path := HalfCircleBottomHalfSquarePath(topLeftX, topLeftY, shapeSize)
+
+	// Build SVG content
+	svgContent := fmt.Sprintf(`<?xml version="1.0"?>
+<svg width="%d" height="%d" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="%d" height="%d" style="fill:#ffffff" />
+<path d="%s" style="fill:#4a90e2;stroke:#2d3436;stroke-width:3" />
+</svg>`, svgWidth, svgHeight, svgWidth, svgHeight, path.path)
+
+	// Write to file
+	filename := "test_halfcirclebottomhalfsquarepath_single.svg"
+	err := os.WriteFile(filename, []byte(svgContent), 0644)
+	if err != nil {
+		fmt.Printf("FAIL: Error writing SVG file: %v\n", err)
+		return
+	}
+
+	fmt.Printf("PASS: SVG file '%s' created successfully!\n", filename)
+	fmt.Printf("  HalfCircleBottomHalfSquare path: %s\n", path.path)
+	fmt.Printf("  Position: (%d, %d), Size: %d\n", topLeftX, topLeftY, shapeSize)
+}
+
 func main() {
 	// testing the Connected Component Analysis algorithm
-	// runCCATests()
+	runCCATests()
 
 	// testing SquarePath
 	// testSquarePath()
@@ -847,14 +1233,26 @@ func main() {
 	// testSquarePathSVG1()
 
 	// testing SquarePath with single centered square
-	testSquarePathSingleSVG()
+	// testSquarePathSingleSVG()
 
-	testDiamondPathSVG1()
-	testDiamondPathSingleSVG()
+	// testDiamondPathSVG1()
+	// testDiamondPathSingleSVG()
 
-	testInverseTrianglePathSVG1()
-	testInverseTrianglePathSingleSVG()
+	// testInverseTrianglePathSVG1()
+	// testInverseTrianglePathSingleSVG()
 
-	testTrianglePathSVG1()
-	testTrianglePathSingleSVG()
+	// testTrianglePathSVG1()
+	// testTrianglePathSingleSVG()
+
+	// testHalfCircleLeftHalfSquarePathSVG1()
+	// testHalfCircleLeftHalfSquarePathSingleSVG()
+
+	// testHalfCircleTopHalfSquarePathSVG1()
+	// testHalfCircleTopHalfSquarePathSingleSVG()
+
+	// testHalfCircleRightHalfSquarePathSVG1()
+	// testHalfCircleRightHalfSquarePathSingleSVG()
+
+	// testHalfCircleBottomHalfSquarePathSVG1()
+	// testHalfCircleBottomHalfSquarePathSingleSVG()
 }
