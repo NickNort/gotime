@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"strconv"
 	"os"
 )
 
@@ -1222,6 +1223,455 @@ func testHalfCircleBottomHalfSquarePathSingleSVG() {
 	fmt.Printf("  Position: (%d, %d), Size: %d\n", topLeftX, topLeftY, shapeSize)
 }
 
+// =========================
+// Connected Squares Outline
+// =========================
+
+// ParseGridCoords parses input like "(0,2) (1,2)" into []Coord.
+// Robust to extra spaces and optional signs.
+func ParseGridCoords(input string) ([]Coord, error) {
+	var coords []Coord
+	i := 0
+	n := len(input)
+
+	parseInt := func() (int, bool) {
+		// optional sign
+		sign := 1
+		if i < n && (input[i] == '+' || input[i] == '-') {
+			if input[i] == '-' {
+				sign = -1
+			}
+			i++
+		}
+		start := i
+		for i < n && input[i] >= '0' && input[i] <= '9' {
+			i++
+		}
+		if start == i {
+			return 0, false
+		}
+		val, err := strconv.Atoi(input[start:i])
+		if err != nil {
+			return 0, false
+		}
+		return sign * val, true
+	}
+
+	skipSpaceComma := func() {
+		for i < n && (input[i] == ' ' || input[i] == '\t' || input[i] == ',') {
+			i++
+		}
+	}
+
+	for i < n {
+		if input[i] != '(' {
+			i++
+			continue
+		}
+		// consume '('
+		i++
+		skipSpaceComma()
+		x, ok := parseInt()
+		if !ok {
+			return nil, fmt.Errorf("parse error: expected integer X near index %d", i)
+		}
+		skipSpaceComma()
+		y, ok := parseInt()
+		if !ok {
+			return nil, fmt.Errorf("parse error: expected integer Y near index %d", i)
+		}
+		// move to ')'
+		for i < n && input[i] != ')' {
+			i++
+		}
+		if i >= n || input[i] != ')' {
+			return nil, fmt.Errorf("parse error: missing closing ')' for coord (%d,%d)", x, y)
+		}
+		// consume ')'
+		i++
+		coords = append(coords, Coord{X: x, Y: y})
+	}
+	if len(coords) == 0 {
+		return nil, fmt.Errorf("no coordinates found")
+	}
+	return coords, nil
+}
+
+// canonicalEdgeKey ensures consistent ordering of an edge's endpoints.
+func canonicalEdgeKey(a, b Coord) [4]int {
+	if a.X < b.X || (a.X == b.X && a.Y <= b.Y) {
+		return [4]int{a.X, a.Y, b.X, b.Y}
+	}
+	return [4]int{b.X, b.Y, a.X, a.Y}
+}
+
+func addEdge(edges map[[4]int]bool, a, b Coord) {
+	key := canonicalEdgeKey(a, b)
+	if edges[key] {
+		delete(edges, key) // toggle off when shared
+	} else {
+		edges[key] = true
+	}
+}
+
+// buildBoundaryEdges builds outer boundary edges (in pixel coords), cancelling shared edges.
+// Returns the edge set and a set of occupied cells for potential future use.
+func buildBoundaryEdges(cells []Coord, size int) (map[[4]int]bool, map[Coord]bool) {
+	edges := make(map[[4]int]bool)
+	cellSet := make(map[Coord]bool, len(cells))
+	for _, c := range cells {
+		cellSet[c] = true
+	}
+	for _, c := range cells {
+		x0 := c.X * size
+		x1 := (c.X + 1) * size
+		y0 := c.Y * size
+		y1 := (c.Y + 1) * size
+
+		tl := Coord{X: x0, Y: y1}
+		tr := Coord{X: x1, Y: y1}
+		br := Coord{X: x1, Y: y0}
+		bl := Coord{X: x0, Y: y0}
+
+		addEdge(edges, tl, tr) // top
+		addEdge(edges, tr, br) // right
+		addEdge(edges, br, bl) // bottom
+		addEdge(edges, bl, tl) // left
+	}
+	return edges, cellSet
+}
+
+// normalize returns unit axis-aligned direction for delta between two vertices.
+func normalize(from, to Coord) Coord {
+	dx := to.X - from.X
+	dy := to.Y - from.Y
+	if dx > 0 {
+		return Coord{X: 1, Y: 0} // East
+	} else if dx < 0 {
+		return Coord{X: -1, Y: 0} // West
+	} else if dy > 0 {
+		return Coord{X: 0, Y: 1} // North (up)
+	}
+	return Coord{X: 0, Y: -1} // South (down)
+}
+
+func rotateRight(d Coord) Coord {
+	// cw order: E (1,0) -> S (0,-1) -> W (-1,0) -> N (0,1) -> E
+	switch {
+	case d.X == 1 && d.Y == 0:
+		return Coord{X: 0, Y: -1}
+	case d.X == 0 && d.Y == -1:
+		return Coord{X: -1, Y: 0}
+	case d.X == -1 && d.Y == 0:
+		return Coord{X: 0, Y: 1}
+	default: // 0,1
+		return Coord{X: 1, Y: 0}
+	}
+}
+
+func rotateLeft(d Coord) Coord {
+	// ccw order: E -> N -> W -> S -> E
+	switch {
+	case d.X == 1 && d.Y == 0:
+		return Coord{X: 0, Y: 1}
+	case d.X == 0 && d.Y == 1:
+		return Coord{X: -1, Y: 0}
+	case d.X == -1 && d.Y == 0:
+		return Coord{X: 0, Y: -1}
+	default: // 0,-1
+		return Coord{X: 1, Y: 0}
+	}
+}
+
+func reverseDir(d Coord) Coord { return Coord{X: -d.X, Y: -d.Y} }
+
+// orderBoundaryVertices walks the boundary edges clockwise keeping inside on the right.
+func orderBoundaryVertices(edges map[[4]int]bool) ([]Coord, error) {
+	if len(edges) == 0 {
+		return nil, fmt.Errorf("no boundary edges")
+	}
+	// Build adjacency list
+	adj := make(map[Coord][]Coord)
+	for k := range edges {
+		a := Coord{X: k[0], Y: k[1]}
+		b := Coord{X: k[2], Y: k[3]}
+		adj[a] = append(adj[a], b)
+		adj[b] = append(adj[b], a)
+	}
+	// Find start: leftmost (min X), then topmost (max Y)
+	var start Coord
+	first := true
+	for v := range adj {
+		if first {
+			start = v
+			first = false
+			continue
+		}
+		if v.X < start.X || (v.X == start.X && v.Y > start.Y) {
+			start = v
+		}
+	}
+	// Right-hand rule traversal
+	cur := start
+	dir := Coord{X: 0, Y: 1} // pretend we came from South -> facing North; prefer right=East first
+
+	path := []Coord{start}
+	used := make(map[[4]int]bool)
+	maxSteps := len(edges)*2 + 10
+
+	pickNext := func(cur, dir Coord) (Coord, Coord, bool) {
+		candidates := []Coord{rotateRight(dir), dir, rotateLeft(dir), reverseDir(dir)}
+		neighbors := adj[cur]
+		// Prefer unused edges first
+		for _, cd := range candidates {
+			for _, nb := range neighbors {
+				if normalize(cur, nb) == cd {
+					key := canonicalEdgeKey(cur, nb)
+					if !used[key] {
+						return nb, cd, true
+					}
+				}
+			}
+		}
+		// Fallback to any matching direction (even if used) to avoid dead-ends
+		for _, cd := range candidates {
+			for _, nb := range neighbors {
+				if normalize(cur, nb) == cd {
+					return nb, cd, true
+				}
+			}
+		}
+		return Coord{}, Coord{}, false
+	}
+
+	for steps := 0; steps < maxSteps; steps++ {
+		next, ndir, ok := pickNext(cur, dir)
+		if !ok {
+			return nil, fmt.Errorf("failed to advance boundary walk")
+		}
+		used[canonicalEdgeKey(cur, next)] = true
+		cur = next
+		dir = ndir
+		path = append(path, cur)
+		if cur == start {
+			break
+		}
+	}
+	if cur != start {
+		return nil, fmt.Errorf("boundary walk did not close")
+	}
+	// Drop the closing duplicate
+	return path[:len(path)-1], nil
+}
+
+// compressColinear removes intermediate points on straight runs (axis-aligned).
+func compressColinear(points []Coord) []Coord {
+	n := len(points)
+	if n <= 2 {
+		return points
+	}
+
+	result := make([]Coord, 0, n)
+	for i := 0; i < n; i++ {
+		prev := points[(i-1+n)%n]
+		cur := points[i]
+		next := points[(i+1)%n]
+		if (prev.X == cur.X && cur.X == next.X) || (prev.Y == cur.Y && cur.Y == next.Y) {
+			continue // drop colinear middle
+		}
+		result = append(result, cur)
+	}
+	if len(result) < 3 {
+		return points
+	}
+	return result
+}
+
+func generateSharpPath(points []Coord) string {
+	if len(points) == 0 {
+		return ""
+	}
+	path := fmt.Sprintf("M %d,%d", points[0].X, points[0].Y)
+	for i := 1; i < len(points); i++ {
+		path += fmt.Sprintf(" L %d,%d", points[i].X, points[i].Y)
+	}
+	path += " Z"
+	return path
+}
+
+func manhattanLen(a, b Coord) int {
+	dx := a.X - b.X
+	if dx < 0 {
+		dx = -dx
+	}
+	dy := a.Y - b.Y
+	if dy < 0 {
+		dy = -dy
+	}
+	return dx + dy
+}
+
+func moveToward(from, to Coord, dist int) Coord {
+	// Assumes axis-aligned
+	if to.X > from.X {
+		return Coord{X: to.X - dist, Y: to.Y}
+	}
+	if to.X < from.X {
+		return Coord{X: to.X + dist, Y: to.Y}
+	}
+	if to.Y > from.Y {
+		return Coord{X: to.X, Y: to.Y - dist}
+	}
+	return Coord{X: to.X, Y: to.Y + dist}
+}
+
+// generateFilletedPath creates quarter-circle-like fillets at each corner using Q commands.
+// Radius is expected pre-clamped to a reasonable global maximum (e.g., size/2).
+func generateFilletedPath(points []Coord, radius int) string {
+	n := len(points)
+	if n == 0 {
+		return ""
+	}
+	if radius <= 0 {
+		return generateSharpPath(points)
+	}
+
+	c1 := make([]Coord, n)
+	c2 := make([]Coord, n)
+	for i := 0; i < n; i++ {
+		prev := points[(i-1+n)%n]
+		cur := points[i]
+		next := points[(i+1)%n]
+		// Clamp per-corner radius to segment lengths
+		r := radius
+		lenIn := manhattanLen(prev, cur)
+		lenOut := manhattanLen(cur, next)
+		if r > lenIn {
+			r = lenIn
+		}
+		if r > lenOut {
+			r = lenOut
+		}
+		if r < 0 {
+			r = 0
+		}
+		// c1 is along incoming edge toward prev; c2 is along outgoing edge toward next
+		c1[i] = moveToward(prev, cur, r)
+		c2[i] = moveToward(next, cur, r)
+	}
+
+	// Start at first c2
+	path := fmt.Sprintf("M %d,%d", c2[0].X, c2[0].Y)
+	for i := 1; i < n; i++ {
+		path += fmt.Sprintf(" L %d,%d", c1[i].X, c1[i].Y)
+		path += fmt.Sprintf(" Q %d,%d %d,%d", points[i].X, points[i].Y, c2[i].X, c2[i].Y)
+	}
+	// Close back to 0
+	path += fmt.Sprintf(" L %d,%d", c1[0].X, c1[0].Y)
+	path += fmt.Sprintf(" Q %d,%d %d,%d", points[0].X, points[0].Y, c2[0].X, c2[0].Y)
+	path += " Z"
+	return path
+}
+
+// ConnectedSquaresOutlinePath converts connected grid cells into a single closed SVG Path.
+// size: square size in pixels. fillet: radius in pixels (will be clamped to <= size/2).
+func ConnectedSquaresOutlinePath(input string, size int, fillet int) (Path, error) {
+	if size <= 0 {
+		return Path{}, fmt.Errorf("size must be positive")
+	}
+	cells, err := ParseGridCoords(input)
+	if err != nil {
+		return Path{}, err
+	}
+	edges, _ := buildBoundaryEdges(cells, size)
+	loop, err := orderBoundaryVertices(edges)
+	if err != nil {
+		return Path{}, err
+	}
+	loop = compressColinear(loop)
+
+	radius := fillet
+	if radius < 0 {
+		radius = 0
+	}
+	if radius > size/2 {
+		radius = size / 2
+	}
+
+	var pathStr string
+	if radius > 0 {
+		pathStr = generateFilletedPath(loop, radius)
+	} else {
+		pathStr = generateSharpPath(loop)
+	}
+	return Path{points: loop, path: pathStr}, nil
+}
+
+// Demo: Writes two SVG files, sharp and filleted, for a sample set of connected squares.
+func testConnectedSquaresOutlineSVG() {
+	fmt.Println("Testing ConnectedSquaresOutlinePath with SVG generation...")
+
+	// Sample rectangle: 3x2 cells
+	cellsStr := "(0,0) (1,0) (2,0) (0,1) (1,1) (2,1)"
+	size := 40
+
+	// Sharp
+	shapeSharp, err := ConnectedSquaresOutlinePath(cellsStr, size, 0)
+	if err != nil {
+		fmt.Printf("FAIL: %v\n", err)
+		return
+	}
+	// Filleted with radius = size/5
+	shapeFillet, err := ConnectedSquaresOutlinePath(cellsStr, size, size/5)
+	if err != nil {
+		fmt.Printf("FAIL: %v\n", err)
+		return
+	}
+
+	// Compute bounding box for SVG sizing
+	minX, minY := shapeSharp.points[0].X, shapeSharp.points[0].Y
+	maxX, maxY := minX, minY
+	for _, p := range shapeSharp.points {
+		if p.X < minX {
+			minX = p.X
+		}
+		if p.Y < minY {
+			minY = p.Y
+		}
+		if p.X > maxX {
+			maxX = p.X
+		}
+		if p.Y > maxY {
+			maxY = p.Y
+		}
+	}
+	margin := size
+	width := maxX + margin
+	height := maxY + margin
+
+	makeSVG := func(d string) string {
+		return fmt.Sprintf(`<?xml version="1.0"?>
+<svg width="%d" height="%d" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="%d" height="%d" style="fill:#ffffff" />
+<path d="%s" style="fill:#4a90e2;stroke:#2d3436;stroke-width:2" />
+</svg>`, width, height, width, height, d)
+	}
+
+	// Write files
+	if err := os.WriteFile("test_connected_squares_outline.svg", []byte(makeSVG(shapeSharp.path)), 0644); err != nil {
+		fmt.Printf("FAIL: writing sharp SVG: %v\n", err)
+		return
+	}
+	if err := os.WriteFile("test_connected_squares_outline_filleted.svg", []byte(makeSVG(shapeFillet.path)), 0644); err != nil {
+		fmt.Printf("FAIL: writing filleted SVG: %v\n", err)
+		return
+	}
+
+	fmt.Println("PASS: ConnectedSquaresOutline SVGs created:")
+	fmt.Println("  - test_connected_squares_outline.svg")
+	fmt.Println("  - test_connected_squares_outline_filleted.svg")
+}
+
 func main() {
 	// testing the Connected Component Analysis algorithm
 	runCCATests()
@@ -1255,4 +1705,7 @@ func main() {
 
 	// testHalfCircleBottomHalfSquarePathSVG1()
 	// testHalfCircleBottomHalfSquarePathSingleSVG()
+
+	// Connected Squares Outline SVG demo (sharp + filleted)
+	// testConnectedSquaresOutlineSVG()
 }
