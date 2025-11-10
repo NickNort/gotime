@@ -2,8 +2,8 @@ package main
 
 import (
 	"fmt"
-	"strconv"
 	"os"
+	"strconv"
 )
 
 type Coord struct {
@@ -1612,7 +1612,7 @@ func testConnectedSquaresOutlineSVG() {
 	fmt.Println("Testing ConnectedSquaresOutlinePath with SVG generation...")
 
 	// Sample rectangle: 3x2 cells
-	cellsStr := "(0,0) (1,0) (2,0) (0,1) (1,1) (2,1)"
+	cellsStr := "(0,0) (0,1) (0,2) (0,3) (0,4) (1,4) (2,4) (3,4) (4,4) (4,3) (4,2) (4,1) (4,0) (3,0) (2,0) (1,0)"
 	size := 40
 
 	// Sharp
@@ -1653,7 +1653,7 @@ func testConnectedSquaresOutlineSVG() {
 		return fmt.Sprintf(`<?xml version="1.0"?>
 <svg width="%d" height="%d" xmlns="http://www.w3.org/2000/svg">
 <rect x="0" y="0" width="%d" height="%d" style="fill:#ffffff" />
-<path d="%s" style="fill:#4a90e2;stroke:#2d3436;stroke-width:2" />
+<path d="%s" fill-rule="evenodd" style="fill:#4a90e2;stroke:#2d3436;stroke-width:2" />
 </svg>`, width, height, width, height, d)
 	}
 
@@ -1707,5 +1707,5 @@ func main() {
 	// testHalfCircleBottomHalfSquarePathSingleSVG()
 
 	// Connected Squares Outline SVG demo (sharp + filleted)
-	// testConnectedSquaresOutlineSVG()
+	testConnectedSquaresOutlineSVG()
 }

@@ -1,0 +1,5 @@
+<?xml version="1.0"?>
+<svg width="240" height="240" xmlns="http://www.w3.org/2000/svg">
+<rect x="0" y="0" width="240" height="240" style="fill:#ffffff" />
+<path d="M 8,200 L 192,200 Q 200,200 200,192 L 200,8 Q 200,0 192,0 L 8,0 Q 0,0 0,8 L 0,192 Q 0,200 8,200 Z" fill-rule="evenodd" style="fill:#4a90e2;stroke:#2d3436;stroke-width:2" />
+</svg>
