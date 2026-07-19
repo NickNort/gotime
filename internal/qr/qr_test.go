@@ -2,6 +2,7 @@ package qr
 
 import (
 	"bytes"
+	"fmt"
 	"testing"
 
 	"github.com/skip2/go-qrcode"
@@ -60,6 +61,38 @@ func TestFindCornersAcrossSmallQRVersions(t *testing.T) {
 			}
 			if corners != test.wantCorners {
 				t.Fatalf("findCorners() = %+v; want %+v", corners, test.wantCorners)
+			}
+		})
+	}
+}
+
+func TestFindCornersAcrossAllQRVersions(t *testing.T) {
+	for version := 1; version <= 40; version++ {
+		t.Run(fmt.Sprintf("version %d", version), func(t *testing.T) {
+			code, err := qrcode.NewWithForcedVersion("x.com", version, qrcode.Highest)
+			if err != nil {
+				t.Fatalf("qrcode.NewWithForcedVersion() error = %v", err)
+			}
+
+			bitmap := code.Bitmap()
+			wantSize := 21 + (version-1)*4 + 8
+			if len(bitmap) != wantSize {
+				t.Fatalf("bitmap size = %d; want %d", len(bitmap), wantSize)
+			}
+
+			farFinderOffset := wantSize - 4 - 7
+			wantCorners := CornerBounds{
+				TopLeft:    CornerRect{X: 4, Y: 4, Width: 7, Height: 7},
+				TopRight:   CornerRect{X: farFinderOffset, Y: 4, Width: 7, Height: 7},
+				BottomLeft: CornerRect{X: 4, Y: farFinderOffset, Width: 7, Height: 7},
+			}
+
+			corners, err := findCorners(bitmap)
+			if err != nil {
+				t.Fatalf("findCorners() error = %v", err)
+			}
+			if corners != wantCorners {
+				t.Fatalf("findCorners() = %+v; want %+v", corners, wantCorners)
 			}
 		})
 	}
