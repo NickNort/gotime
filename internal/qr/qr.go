@@ -45,7 +45,7 @@ type Options struct {
 // - Center (positions 2-4): dark (true)
 func isFinderPattern(bitmap [][]bool, x, y int) bool {
 	size := len(bitmap)
-	if x+7 > size || y+7 > size {
+	if x < 0 || y < 0 || x+7 > size || y+7 > size {
 		return false
 	}
 
@@ -87,75 +87,53 @@ func isFinderPattern(bitmap [][]bool, x, y int) bool {
 	return true
 }
 
-// findCorners identifies the three corner finder patterns in a QR code bitmap
-func findCorners(bitmap [][]bool) CornerBounds {
+// findCorners identifies the three corner finder patterns in a QR code bitmap.
+// QR finder positions are fixed relative to the symbol's quiet zone, so derive
+// them from the leading light rows instead of scanning a size-dependent region.
+func findCorners(bitmap [][]bool) (CornerBounds, error) {
 	size := len(bitmap)
-	var bounds CornerBounds
-
-	// Search region for top corners (vertical limit)
-	topSearchLimit := size / 3 // Search top third for top corners
-	if topSearchLimit < 7 {
-		topSearchLimit = 7
+	if size < 21 {
+		return CornerBounds{}, fmt.Errorf("bitmap is too small to contain a QR code: %dx%d", size, size)
 	}
-	if topSearchLimit > size-7 {
-		topSearchLimit = size - 7
-	}
-
-	// Search region for left/right corners (horizontal limit)
-	sideSearchLimit := size / 3 // Search outer third for side corners
-	if sideSearchLimit < 7 {
-		sideSearchLimit = 7
-	}
-	if sideSearchLimit > size-7 {
-		sideSearchLimit = size - 7
-	}
-
-	// Find top-left corner (search from top-left)
-	for y := 0; y < topSearchLimit; y++ {
-		for x := 0; x < sideSearchLimit; x++ {
-			if isFinderPattern(bitmap, x, y) {
-				bounds.TopLeft = CornerRect{X: x, Y: y, Width: 7, Height: 7}
-				goto foundTopLeft
-			}
+	for y, row := range bitmap {
+		if len(row) != size {
+			return CornerBounds{}, fmt.Errorf("bitmap row %d has width %d; expected %d", y, len(row), size)
 		}
 	}
-foundTopLeft:
 
-	// Find top-right corner (search from top-right, right to left)
-	maxX := size - 7
-	minX := size - sideSearchLimit
-	if minX < 0 {
-		minX = 0
-	}
-	for y := 0; y < topSearchLimit; y++ {
-		// Search from right edge going left
-		for x := maxX; x >= minX; x-- {
-			if isFinderPattern(bitmap, x, y) {
-				bounds.TopRight = CornerRect{X: x, Y: y, Width: 7, Height: 7}
-				goto foundTopRight
+	quietZoneSize := 0
+	for quietZoneSize < size {
+		rowIsLight := true
+		for _, moduleIsDark := range bitmap[quietZoneSize] {
+			if moduleIsDark {
+				rowIsLight = false
+				break
 			}
 		}
+		if !rowIsLight {
+			break
+		}
+		quietZoneSize++
 	}
-foundTopRight:
 
-	// Find bottom-left corner (search from bottom-left, bottom to top)
-	maxY := size - 7
-	minY := size - topSearchLimit
-	if minY < 0 {
-		minY = 0
+	farFinderOffset := size - quietZoneSize - 7
+	bounds := CornerBounds{
+		TopLeft:    CornerRect{X: quietZoneSize, Y: quietZoneSize, Width: 7, Height: 7},
+		TopRight:   CornerRect{X: farFinderOffset, Y: quietZoneSize, Width: 7, Height: 7},
+		BottomLeft: CornerRect{X: quietZoneSize, Y: farFinderOffset, Width: 7, Height: 7},
 	}
-	// Search from bottom going up
-	for y := maxY; y >= minY; y-- {
-		for x := 0; x < sideSearchLimit; x++ {
-			if isFinderPattern(bitmap, x, y) {
-				bounds.BottomLeft = CornerRect{X: x, Y: y, Width: 7, Height: 7}
-				goto foundBottomLeft
-			}
+
+	for name, corner := range map[string]CornerRect{
+		"top-left":    bounds.TopLeft,
+		"top-right":   bounds.TopRight,
+		"bottom-left": bounds.BottomLeft,
+	} {
+		if !isFinderPattern(bitmap, corner.X, corner.Y) {
+			return CornerBounds{}, fmt.Errorf("%s finder pattern not found at (%d, %d)", name, corner.X, corner.Y)
 		}
 	}
-foundBottomLeft:
 
-	return bounds
+	return bounds, nil
 }
 
 // isInCorner checks if a module at (x, y) is within any of the corner rectangles
@@ -391,7 +369,10 @@ func GenerateSVG(content string, opts Options) ([]byte, error) {
 	bitmap := q.Bitmap()
 
 	// Find corner finder patterns
-	corners := findCorners(bitmap)
+	corners, err := findCorners(bitmap)
+	if err != nil {
+		return nil, fmt.Errorf("failed to locate finder patterns: %w", err)
+	}
 
 	// Create buffer to capture SVG output
 	var buf bytes.Buffer
